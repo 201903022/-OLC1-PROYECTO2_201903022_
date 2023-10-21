@@ -206,12 +206,13 @@ class TableeI extends Instruction{
 
         '';
         console.log('columnas length: '+  this.columnas.length);
-        if (this.columnas.length = 1) {
+        if (this.columnas.length == 1) {
             let columnasCreate = obtenerContador();
             let idColumna = obtenerContador(); 
             let idTipo = obtenerContador();
             let idValueC = obtenerContador(); 
             let tipoDato = obtenerContador(); 
+            
             cadena += `${columnasCreate} [label="columnasCreate"]\n`
             cadena += `${idColumna} [label="ID"]\n`
             cadena += `${idTipo} [label="TipoDato"]\n`
@@ -223,6 +224,7 @@ class TableeI extends Instruction{
             cadena += `${idTipo} -- ${tipoDato} \n`
             cadena += `${listColumnas} -- ${columnasCreate} \n`
         } else if (this.columnas.length > 1) {
+            console.log('-------------mayore k 1')
             for (let index = 0; index < this.columnas.length; index++) {
                 let columnasCreate = obtenerContador();
                 let idColumna = obtenerContador(); 
@@ -230,10 +232,14 @@ class TableeI extends Instruction{
                 let idValueC = obtenerContador(); 
                 let tipoDato = obtenerContador(); 
                 let coma = obtenerContador();
+                let listaColumnas2 = obtenerContador();
+                let columnaAnterior ;
+                let columnaDespues;
                 cadena += `${columnasCreate} [label="columnasCreate"]\n`
                 cadena += `${idColumna} [label="ID"]\n`
                 cadena += `${idValueC} [label="${this.columnas[index].name}"]\n`
                 cadena += `${tipoDato} [label="${this.columnas[index].tipo}"]\n`    
+                cadena += `${listaColumnas2} [label="listaColumnas"]\n`
                 cadena += `${coma} [label=","]\n`
                 cadena += `${idTipo} [label="TipoDato"]\n`
                 cadena += `${columnasCreate} -- ${idColumna} \n`
@@ -242,7 +248,6 @@ class TableeI extends Instruction{
                 cadena += `${idTipo} -- ${tipoDato} \n`
                 cadena += `${listColumnas} -- ${columnasCreate} \n`  
                 cadena += `${listColumnas} -- ${coma} \n`  
-
 
             }
             

@@ -3,6 +3,7 @@ const Dato = require('../Clases/Dato.js');
 const TipoOp = require('../Enums/TipoOp.js');
 const Instruction = require('../Clases/Instruction.js');
 const e = require('cors');
+let obtenerContador  = require('../Arbol/datos.js');
 
 
 class AlterT extends Instruction{
@@ -24,6 +25,51 @@ class AlterT extends Instruction{
         } catch (error) {
             
         }
+    }
+
+    generarAst(){ 
+        let node = { 
+            padre: -1, 
+            cadena: ''
+        }
+
+        let labels = '';
+        let uniones = '';
+        let salida ='';
+
+        let alterTable = obtenerContador() ;
+        labels += alterTable+' [label="ALTER_TABLE"];\n';
+        let alterR = obtenerContador(); 
+        labels += `${alterR} [label="alter"]\n`;
+        let tableR = obtenerContador(); 
+        labels += `${tableR} [label="table"]\n`;
+        let tableName = obtenerContador();
+        labels += tableName+' [label="ID"];\n';
+        let idTableName = obtenerContador();
+        labels += idTableName+' [label="'+this.tableName+'"];\n';
+        uniones += `${tableName} -- ${idTableName}\n`
+        let instAlerR = obtenerContador(); 
+        labels += `${instAlerR} [label="instAlter"]\n`;
+        let type = this.typAction.generarAst();
+
+
+        labels += type.cadena; 
+        uniones += `${instAlerR} -- ${type.padre}\n`;
+        uniones += `${alterTable} -- ${alterR}\n`;
+        uniones += `${alterTable} -- ${tableR}\n`;
+        uniones += `${alterTable} -- ${tableName}\n`;
+        uniones += `${alterTable} -- ${instAlerR}\n`;
+
+        salida = labels + uniones; 
+        console.log(salida)
+        node.cadena = salida;
+        node.padre = alterTable;
+        return node;
+
+
+
+
+
     }
 }
 module.exports=AlterT;

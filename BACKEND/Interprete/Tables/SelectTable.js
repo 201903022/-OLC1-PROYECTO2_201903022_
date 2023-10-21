@@ -2,6 +2,7 @@ const TipoDato = require('../Enums/TipoDato.js');
 const Dato = require('../Clases/Dato.js');
 const TipoOp = require('../Enums/TipoOp.js');
 const Instruction = require('../Clases/Instruction.js');
+let obtenerContador  = require('../Arbol/datos.js');
 
 var Logicas = [
     TipoOp.AND,TipoOp.IGUAL,TipoOp.MAYORIK,
@@ -151,6 +152,83 @@ class SelectTable extends Instruction {
 
 
         console.log('-----------------------------------')
+
+    }
+
+    generarAst(){ 
+        let node = { 
+            padre: -1, 
+            cadena: ""
+        }
+
+        let labels = '';
+        let uniones = '';
+        let salida = '';
+
+        let SelectDad = obtenerContador();
+        labels += `${SelectDad} [label="SelectG"]\n`
+        let Rselect = obtenerContador();
+        labels += `${Rselect} [label ="select"]\n`;
+        let Risnt = obtenerContador(); 
+        labels += `${Risnt} [label ="instSelect"]\n`;
+        let Rfrom = obtenerContador();
+        labels += `${Rfrom} [label ="from"]\n`;
+        let Rid  = obtenerContador(); 
+        labels += `${Rid} [label ="ID"]\n`;
+        let Idvalue = obtenerContador(); 
+        labels += `${Idvalue} [label ="${this.tableName}"]\n`;
+        uniones += `${Rid} -- ${Idvalue}\n`
+        uniones += `${SelectDad} -- ${Rselect}\n`;
+        uniones += `${SelectDad} -- ${Risnt}\n`;
+        uniones += `${SelectDad} -- ${Rfrom}\n`;
+        uniones += `${SelectDad} -- ${Rid}\n`;
+        if (this.instruccion == '*') {
+            let Rasterisco = obtenerContador();
+            labels += `${Rasterisco} [label ="*"]\n`; 
+            uniones += `${Risnt} -- ${Rasterisco}\n`; 
+        }else { 
+            let array = this.instruccion;
+            let Rlist = obtenerContador(); 
+            labels += `${Rlist} [label ="listColumnas"]\n`;
+            for (let index = 0; index < array.length; index++) {
+                const element = array[index];
+                let idColumn = obtenerContador();
+                let columnId = obtenerContador();
+                labels += `${idColumn} [label ="${element}"]\n`;
+                labels += `${columnId} [label ="columnId"]\n`;
+                uniones += `${Rlist} -- ${columnId}\n`;
+                uniones += `${columnId} -- ${idColumn}\n`;
+                if (index + 1 != array.length) {
+                    let coma = obtenerContador();
+                    labels += `${coma} [label ="," ]\n`;
+                    uniones += `${Rlist} -- ${coma}\n`;   
+                }
+            } 
+            uniones += `${Risnt} -- ${Rlist}\n`;  
+        }
+
+
+
+        if (this.expresion!=null) {
+            let Rwhere = obtenerContador();
+            labels += `${Rwhere} [label ="where"]\n`;
+            let exp = this.expresion.generarAst(); 
+            uniones += exp.cadena;
+            uniones += `${Rwhere} -- ${exp.padre}\n`;
+            uniones += `${SelectDad} -- ${Rwhere}`
+        } else {
+            
+        }
+        
+        salida += labels + uniones;
+        console.log('==================================')
+        console.log(salida)
+        node.cadena = salida;
+        node.padre = SelectDad;
+        return node;
+        //      
+        //Select *from Id where?null
+
 
     }
 }

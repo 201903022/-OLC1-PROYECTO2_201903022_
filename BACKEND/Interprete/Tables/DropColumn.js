@@ -2,6 +2,7 @@ const TipoDato = require('../Enums/TipoDato.js');
 const Dato = require('../Clases/Dato.js');
 const TipoOp = require('../Enums/TipoOp.js');
 const Instruction = require('../Clases/Instruction.js');
+let obtenerContador  = require('../Arbol/datos.js');
 
 class DropColumn extends Instruction{ 
     constructor( columnName, fila, columna){ 
@@ -31,6 +32,42 @@ class DropColumn extends Instruction{
             //lista_errores.push(`Error Semantico: No existe la tabla ${this.tableName} fila: ${this.fila} columna: ${this.columna}`)
         }
     
+    }
+
+    generarAst(){ 
+       let node = { 
+            padre: -1, 
+            cadena: ''
+       }
+
+        let labels = '';
+        let uniones = '';
+        let salida ='';
+
+       let dropPadre = obtenerContador(); 
+       labels += `${dropPadre} [label="DropG"]\n`
+        let dropR = obtenerContador();
+        labels += `${dropR} [label="drop"]\n`
+        let columnR = obtenerContador();
+        labels += `${columnR} [label="column"]\n`
+        let idColumn = obtenerContador();
+        labels += `${idColumn} [label="ID"]\n`
+        let idValue = obtenerContador();
+        labels += `${idValue} [label="${this.columnName}"]\n`
+
+
+        uniones += `${idColumn} -- ${idValue}\n`;
+        uniones += `${dropPadre} -- ${dropR}\n`;
+        uniones += `${dropPadre} -- ${columnR}\n`;
+        uniones += `${dropPadre} -- ${idColumn}\n`;
+
+        //salida
+        salida = labels + uniones;
+        console.log(salida)
+        node.cadena = salida;
+        node.padre = dropPadre;
+        return node;
+
     }
 
 }

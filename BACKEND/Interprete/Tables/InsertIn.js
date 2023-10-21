@@ -2,6 +2,7 @@ const TipoDato = require('../Enums/TipoDato.js')
 const Dato = require('../Clases/Dato.js');
 const Instruction = require('../Clases/Instruction.js');
 const TipoOp = require('../Enums/TipoOp.js');
+let obtenerContador  = require('../Arbol/datos.js');
 
 
 class InsertIn extends Instruction { 
@@ -74,6 +75,110 @@ class InsertIn extends Instruction {
         var auxMap = auxTable.getMapList(0);
         console.log('--------Fin Interpretar Insert--------')
         
+    }
+
+    generarAst(){
+        let node = { 
+            padre : -1, 
+            cadena: ''
+        }
+        var labels = '';
+        var uniones = '';
+        var salida = ``;
+        
+        let IDvalue = obtenerContador();
+        let Rinsert = obtenerContador(); 
+        let Rinto = obtenerContador(); 
+        let ID = obtenerContador();
+        let para1 = obtenerContador();
+        labels += `${IDvalue} [label="${this.inTable}"]\n`
+        labels += `${Rinsert} [label="insert"]\n`
+        labels += `${Rinto} [label="into"]\n`
+        labels += `${ID} [label="ID"]\n`  
+        labels += `${para1} [label="("]\n`
+
+        let listColumnas = obtenerContador(); 
+        labels += `${listColumnas} [label="listColumnas"]\n`
+        let parc2 = obtenerContador();
+        labels += `${parc2} [label=")"]\n`
+        if (this.inColumns.length == 1) {
+            let idColumn = obtenerContador();
+            let columnId = obtenerContador();
+            labels += `${idColumn} [label="${this.inColumns[0]}"]\n`
+            labels += `${columnId} [label="columnId"]\n`
+            uniones += `${listColumnas} -- ${columnId}\n`
+            uniones += `${columnId} -- ${idColumn}\n`
+            
+        } else if(this.inColumns.length > 1) {
+            let array = this.inColumns;
+            for (let index = 0; index < array.length; index++) {
+                let idColumn = obtenerContador();
+                let columnId = obtenerContador();
+                labels += `${idColumn} [label="${this.inColumns[index]}"]\n`
+                labels += `${columnId} [label="columnId"]\n`
+                uniones += `${listColumnas} -- ${columnId}\n`
+                uniones += `${columnId} -- ${idColumn}\n`
+                if ((index + 1) != array.length) {
+                    let coma = obtenerContador();
+                    labels += `${coma} [label=","]\n`            
+                    uniones += `${listColumnas} -- ${coma}\n`  
+                }
+                
+            }
+
+
+
+            
+        }
+
+        let valuesR = obtenerContador();
+        let parA = obtenerContador();
+        if (this.values.length == 1) {
+            let nodeExp = this.values[0].generarAst();
+            labels += nodeExp.cadena;
+            uniones += `${valuesR} -- ${nodeExp.padre}\n`
+            
+        } else if(this.inColumns.length > 1) {
+            let array = this.values;
+            for (let index = 0; index < array.length; index++) {
+                let nodeExp = array[index].generarAst();
+                labels += nodeExp.cadena;
+                uniones += `${valuesR} -- ${nodeExp.padre}\n`
+                if ((index + 1) != array.length) {
+                    let coma = obtenerContador();
+                    labels += `${coma} [label=","]\n`            
+                    uniones += `${valuesR} -- ${coma}\n`  
+                } else {
+                    
+                }  
+            }
+
+
+
+            
+        }
+        let parC = obtenerContador();
+        let InsertPadre = obtenerContador();
+        labels += `${valuesR} [label="values"]\n`
+        labels += `${parA} [label="("]\n`
+        labels += `${parC} [label=")"]\n`
+        uniones += `${ID} -- ${IDvalue}\n`
+        labels += `${InsertPadre} [label="INSERT"]\n`
+        uniones += `${InsertPadre} -- ${Rinsert}\n`
+        uniones += `${InsertPadre} -- ${Rinto}\n`
+        uniones += `${InsertPadre} -- ${ID}\n`
+        uniones += `${InsertPadre} -- ${para1}\n`
+        uniones += `${InsertPadre} -- ${listColumnas}\n`
+        uniones += `${InsertPadre} -- ${parc2}\n`
+        uniones += `${InsertPadre} -- ${parA}\n`
+        uniones += `${InsertPadre} -- ${valuesR}\n`
+        uniones += `${InsertPadre} -- ${parC}\n`
+        salida += labels;
+        salida += uniones;
+        console.log(salida); 
+        node.cadena = salida;
+        node.padre = InsertPadre;
+        return node;
     }
 }
 module.exports=InsertIn;

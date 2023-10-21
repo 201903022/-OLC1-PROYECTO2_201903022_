@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node pruebas.js",
     "arbol":"node Arbolg.js",
+    "prueba":"node Pruebast.js",
     "generar": "jison ./Analizador/Gramatica.jison -o ./Analizador/Parser.js",
     "dev": "nodemon index.js"
   },

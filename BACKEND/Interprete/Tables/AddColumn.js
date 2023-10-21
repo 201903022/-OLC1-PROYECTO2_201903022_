@@ -2,6 +2,8 @@ const TipoDato = require('../Enums/TipoDato.js');
 const Dato = require('../Clases/Dato.js');
 const TipoOp = require('../Enums/TipoOp.js');
 const Instruction = require('../Clases/Instruction.js');
+let obtenerContador  = require('../Arbol/datos.js');
+
 
 
 class AddColumn extends Instruction{ 
@@ -37,5 +39,45 @@ class AddColumn extends Instruction{
 
         console.log('--------------------------------------')
     } 
+
+    generarAst(){ 
+        let node = { 
+            padre: -1, 
+            cadena: ''
+        }
+        let labels = '';
+        let uniones = '';
+        let salida ='';
+
+        let addColumn = obtenerContador() ;
+        labels += addColumn+' [label="ADD"];\n';
+        console.log('tama;o : ' + this.columnas.length)
+            let columnasCreate = obtenerContador();
+            let idColumna = obtenerContador(); 
+            let idTipo = obtenerContador();
+            let idValueC = obtenerContador(); 
+            let tipoDato = obtenerContador(); 
+            let element = this.columnas;
+            labels += `${columnasCreate} [label="columnasCreate"]\n`
+            labels += `${idColumna} [label="ID"]\n`
+            labels += `${idValueC} [label="${element.name}"]\n`
+            labels += `${tipoDato} [label="${element.tipo}"]\n`    
+            
+            labels += `${idTipo} [label="TipoDato"]\n`
+            uniones += `${columnasCreate} -- ${idColumna} \n`
+            uniones += `${columnasCreate} -- ${idTipo} \n`
+            uniones += `${idColumna} -- ${idValueC} \n`
+            uniones += `${idTipo} -- ${tipoDato} \n`
+            uniones += `${addColumn} -- ${columnasCreate} \n`  
+            
+
+        salida += labels + uniones;
+        node.cadena += salida;
+        console.log(salida)
+        node.padre = addColumn;
+        return node;
+
+
+    }
 }
 module.exports = AddColumn;

@@ -2,6 +2,7 @@ const TipoDato = require('../Enums/TipoDato.js')
 const Dato = require('../Clases/Dato.js');
 const Instruction = require('../Clases/Instruction.js');
 const TipoOp = require('../Enums/TipoOp.js');
+let obtenerContador  = require('../Arbol/datos.js');
 
 var Logicas = [
     TipoOp.AND,TipoOp.IGUAL,TipoOp.MAYORIK,
@@ -172,6 +173,74 @@ class CondicionT extends Instruction {
             
         }
         console.log('----------------------------------')
+
+    }
+
+    generarAst(){ 
+        let node = { 
+            padre: -1, 
+            cadena: ''
+        }
+        let salida = ''; 
+        let labels = '';
+        let uniones = '';
+        var OpLeft;
+        var OpRight = this.OpDer.generarAst(); 
+        if (!this.isNot) {
+             OpLeft = this.OpIzq.generarAst(); 
+        }
+        if (Relacionales.includes(this.tipo)) {
+            let IDvalue1 = this.OpIzq.valor;
+            let Rrelacional = obtenerContador();
+            labels += `${Rrelacional} [label="Condicion_Relacional"]\n`
+            let RId = obtenerContador();
+            labels += `${RId} [label = "ID" ]\n`
+            let IdValue = obtenerContador();
+            labels += `${IdValue} [label = "${IDvalue1}" ]\n` 
+            let operador = obtenerContador(); 
+            labels += `${operador} [label = "${this.tipo}" ]\n`
+            uniones += `${RId} -- ${IdValue}\n`
+            uniones += `${Rrelacional} -- ${RId}\n`
+            uniones += `${Rrelacional} -- ${operador}\n`
+            uniones += `${Rrelacional} -- ${OpRight.padre}\n`
+            salida += labels;
+            salida += uniones;
+            salida += OpRight.cadena;
+            node.cadena = salida;
+            node.padre = Rrelacional;
+            console.log(salida);
+            return node;
+        } else if(Logicaas1.includes(this.tipo)) {
+            let Rlogico = obtenerContador();
+            labels += `${Rlogico} [label="Condicion Logica"]\n`
+            if (this.tipo == TipoOp.NOT) {
+                let RNot = obtenerContador(); 
+                labels += `${RNot} [label="NOT"]\n`
+                uniones += `${Rlogico} -- ${RNot}\n`
+                uniones += `${Rlogico} -- ${OpRight.padre}\n`
+                salida += labels;
+                salida += uniones;
+                node.cadena = salida;
+                node.padre = Rlogico;
+                console.log(salida);
+                return node; 
+            } else {
+                let operacion = obtenerContador(); 
+                labels += `${operacion} [label="${this.tipo}"]\n`
+                uniones += `${Rlogico} -- ${OpLeft.padre}\n`
+                uniones += `${Rlogico} -- ${operacion}\n`
+                uniones += `${Rlogico} -- ${OpRight.padre}\n`
+                salida += labels;
+                salida += uniones;
+                node.cadena = salida;
+                node.padre = Rlogico;
+                console.log(salida);
+                return node;   
+            }
+            
+        }
+
+
 
     }
 

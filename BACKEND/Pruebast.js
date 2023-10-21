@@ -2,7 +2,7 @@ const parser = require('./Analizador/Parser.js')
 
 const Entorno = require('./Interprete/Entornos/Entorno.js');
 const variablee = require('./Interprete/Entornos/Variable.js');
-var entrada = 'create table prueba (correo varchar) ;'
+var entrada = 'alter table prueba rename to adios   ;'
 var resultado = parser.parse(entrada);
 var lista_errores = [];
 
