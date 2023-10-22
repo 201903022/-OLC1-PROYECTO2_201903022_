@@ -2,7 +2,10 @@
 %lex
 // no importe si es mayusc o minusc
 %options case-insensitive 
+
 //EXP 
+//comentario simple: 
+comment  "--".*;
 integer  [0-9]+;
 // double = numero punto numero 
 double    ([0-9]+("."[0-9]+)) ; 
@@ -15,9 +18,17 @@ dates ([0-9]{4} "-" [0-9]{2} "-"[0-9]{2}  );
 //Variables: 
 variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 
+//comentario multilinea:
+//comment2 "\/\*"(.|\n)*?\*\/";
 %%
 //Reglas Lexicas
+"--".*                {console.log('comentario simple'); }
+/*
 
+https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/Grammar.jison
+
+*/
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] {console.log('multilinea');} // comment multiple lines
 //tipo de datos
 "int" 			{return 'R_INT';}
 "double" 		{return 'R_DOUBLE';}
@@ -38,6 +49,7 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 "rename"		{return 'R_RENAME';}
 "add"			{return 'R_ADD';}
 "to"			{return 'R_TO';}
+"delete"		{return 'R_DELETE';}
 
 //select
 "select" 		{return 'R_SELECT';}
@@ -109,6 +121,8 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 {variable}       { return 'VARIABLE'; }
 
 // Lo que se ignora
+//{comment}             {/* Ignorar comentarios de una línea */}
+//{comment2}             {console.log('comentario multilinea');/* Ignorar comentarios multilinea */}
 [ \s\r\n\t]             {/* Espacios se ignoran */}
 
 //FIN DE CADENA Y ERRORES
@@ -134,6 +148,9 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 	const CallVar = require('../Interprete/Clases/CallVar.js');
 	//PRINT 
 	const Mostraar = require('../Interprete/Clases/PRINT.js');
+
+	//Casteo: 
+	const Casteo = require('../Interprete/Clases/Casteo.js');
 	const Columnas = require('../Interprete/Tables/Columnas.js');
 	const TableeI = require('../Interprete/Tables/TableeI.js');
 	const InsertIng = require('../Interprete/Tables/InsertIn.js');
@@ -145,6 +162,8 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 	const SelectTable = require('../Interprete/Tables/SelectTable.js');
 	const ConditionT = require('../Interprete/Tables/CondicionT.js');
 	const UpdateT = require('../Interprete/Tables/UpdateT.js');
+	const DeleteT1= require('../Interprete/Tables/DeleteT.js');
+	const Bloque = require('../Interprete/Clases/BloqueBegin.js');
 %}
 
 // Precedencia
@@ -199,16 +218,60 @@ instrucciones
 		 }
 ;
 instruccion
-	: asignaciones1 PCOMA {console.log('asigancion instruccion');}
-	| actualizarV PCOMA {console.log('actualizar variable')}
-	| ifG PCOMA {console.log('if instruccion');}
+	:ifG PCOMA {console.log('if instruccion');}
 	| print PCOMA {console.log('print instruccion');}
 	| createTable PCOMA {console.log('Instruccion createTable');}
 	| insertG PCOMA {console.log('Instruccion insertG');}
 	| alterTable PCOMA {console.log('Instruccion alterTable');}
 	| select PCOMA {console.log('Instruccion select');}
 	| updateG PCOMA {console.log('Instruccion select');}
+	| deletG PCOMA {console.log('Instruccion select');}
+	| beginEnd {console.log('Instruccion beginEnd');}
 	| error PCOMA	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+;
+
+beginEnd 
+:R_BEGIN instruccionesBegin R_END 
+		{
+			console.log('beginEnd');
+			$$ = new Bloque($2,this._$.first_line, this._$.first_column);
+		}
+;
+
+instruccionesBegin
+	:instruccionesBegin instruccionBegin
+	{
+		console.log('instrucciones instruccionBegin');		
+	    $$ = $1;
+			if (Array.isArray($2)) {
+				$1.forEach(element => {
+				   $$.push(element);
+				});
+				//console.log("JISON miVariable es un arreglo.");
+			} else {
+				//console.log(" JISON miVariable no es un arreglo.");
+				$$.push($2);
+			}	
+	}
+	|instruccionBegin{ 
+		console.log('instruccionBegin');
+	    $$ = []; 
+			if (Array.isArray($1)) {
+				$1.forEach(element => {
+				   $$.push(element);
+				});
+				//console.log("JISON miVariable es un arreglo.");
+			} else {
+				//console.log(" JISON miVariable no es un arreglo.");
+	   			$$.push($1);
+			}	
+	}
+;
+
+instruccionBegin
+	:asignaciones1 PCOMA {console.log('asigancion');}
+	|actualizarV PCOMA {console.log('actualizarV');}
+	|instruccion	
 ;
 expresion 	
 	: MENOS expresion %prec UMINUS {
@@ -297,6 +360,9 @@ expresion
 		console.log('LLAMADO DE VARIABLE: ' +$1); 
 		$$ = new CallVar($1,this._$.first_line, this._$.first_column);
 		}
+	| casteo {
+		$$ = $1;
+		}
 ;
 
 asignaciones1 
@@ -361,10 +427,10 @@ print
 ;
 
 ifG 
-	: R_IF expresion R_THEN R_BEGIN instrucciones R_END
+	: R_IF expresion R_THEN  instrucciones R_END R_IF
 	{
 		console.log(`If: ${$2} valor: ${$5}`);
-		$$ = new IfC($2,$5,this._$.first_line, this._$.first_column);
+		$$ = new IfC($2,$4,this._$.first_line, this._$.first_column);
 	}
 	| R_IF expresion R_THEN  instrucciones R_ELSE instrucciones R_END R_IF{
 
@@ -374,7 +440,10 @@ ifG
 ;
 
 casteo
-	: R_CAST PARA expresion R_AS tipoDato PARC
+	: R_CAST PARA expresion R_AS tipoDato PARC { 
+		console.log('Casteo');
+		$$ = new Casteo($3,$5,this._$.first_line, this._$.first_column);
+	}
 ;
 
 createTable 
@@ -444,7 +513,7 @@ alterTable
 	}
 ;
 
-instAlter 
+instAlter
 	: R_ADD columnasCreate
 	{ 
 		console.log('instAlter add colummn');
@@ -568,5 +637,14 @@ set
 		$$ = [ ];
 		$$.push($1 );
 		$$.push($3 );
+	}
+;
+
+
+deletG
+	: R_DELETE R_FROM ID where{ 
+		console.log('Delete');
+		$$ = new DeleteT1($3,$4,this._$.first_line, this._$.first_column);
+
 	}
 ;

@@ -5,6 +5,7 @@ const TipoDato = require('../Enums/TipoDato.js');
 const Dato = require('../Clases/Dato.js');
 const TipoOp = require('../Enums/TipoOp.js');
 const Instruction = require('../Clases/Instruction.js');
+let obtenerContador  = require('../Arbol/datos.js');
 
 class ExpresionLo extends Instruction{
     constructor(OpIzq,OpDer,tipo,fila,columna){ 
@@ -115,6 +116,38 @@ class ExpresionLo extends Instruction{
         }
 
 
+
+
+    }
+    
+    //
+    generarAst(){ 
+        let node = { 
+            padre: -1, 
+            cadena: ''
+        }
+        
+        let labels = '';
+        let uniones = '';
+        let salida = '';
+        let OpLeft = this.OpIzq.generarAst();
+        let OpRight = this.OpDer.generarAst(); 
+        labels += OpLeft.cadena;
+        labels += OpRight.cadena;
+
+        let dad = obtenerContador(); 
+        labels += `${dad} [label="expresionLogica" ]\n `
+        let tipo = obtenerContador(); 
+        labels += `${tipo} [label="${this.tipo}"]\n`
+
+        //uniones: 
+        uniones += `${dad} -- ${OpLeft.padre}\n`
+        uniones += `${dad} -- ${tipo}\n`
+        uniones += `${dad} -- ${OpRight.padre}\n`
+        //salida:
+        node.cadena = labels + uniones;
+        node.padre = dad;
+        return node;
     }
 
 

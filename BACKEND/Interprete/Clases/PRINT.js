@@ -1,6 +1,12 @@
 const Instruction = require('./Instruction.js');
 let obtenerContador  = require('../Arbol/datos.js');
- 
+const {
+    agregarSalir,
+    agregarSelect,
+    getSalida,
+    getSeleccion
+  } = require('../Temporales/Temporal.js');
+  
 
 class PRINT extends Instruction{
     constructor(expresion, fila, columna){
@@ -16,11 +22,14 @@ class PRINT extends Instruction{
         try {
             var valor = this.expresion.interpretar(entorno,lista_errores);
             console.log('clg: ' + valor.valor)
-            
+            res.status(200).json({message:valor.valor });
         } catch (error) {
             console.log(`Error en interpretar PRINT ${this.fila}`)
             
         }
+        agregarSalir(valor.valor);
+        return valor.valor
+
     }
 
     generarAst(){ 
@@ -30,20 +39,14 @@ class PRINT extends Instruction{
         }
         let exp = this.expresion.generarAst();
         let son = obtenerContador();
-        let parA = obtenerContador(); 
-        let parC = obtenerContador();
         let dad = obtenerContador(); 
-        nodo.cadena = 
-        exp.cadena + 
+        nodo.cadena = exp.cadena + 
         `${dad}[label="PRINT"]\n`+ 
         `${son}[label="print"] \n`+
-        `${parA}[label="(" ]\n`+
-        `${parC}[label=")" ]\n`+
         `${dad} -- ${son}\n`+
-        `${dad} -- ${parA}\n`+
-        `${dad} -- ${exp.padre}\n`+
-        `${dad} -- ${parC}\n`;
+        `${dad} -- ${exp.padre}\n`;
         console.log(nodo.cadena)
+        nodo.padre = dad;
         return nodo;
     }
 }

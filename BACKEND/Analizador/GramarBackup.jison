@@ -2,7 +2,10 @@
 %lex
 // no importe si es mayusc o minusc
 %options case-insensitive 
+
 //EXP 
+//comentario simple: 
+comment  "--".*;
 integer  [0-9]+;
 // double = numero punto numero 
 double    ([0-9]+("."[0-9]+)) ; 
@@ -15,9 +18,17 @@ dates ([0-9]{4} "-" [0-9]{2} "-"[0-9]{2}  );
 //Variables: 
 variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 
+//comentario multilinea:
+//comment2 "\/\*"(.|\n)*?\*\/";
 %%
 //Reglas Lexicas
+"--".*                {console.log('comentario simple'); }
+/*
 
+https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/Grammar.jison
+
+*/
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] {console.log('multilinea');} // comment multiple lines
 //tipo de datos
 "int" 			{return 'R_INT';}
 "double" 		{return 'R_DOUBLE';}
@@ -38,6 +49,7 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 "rename"		{return 'R_RENAME';}
 "add"			{return 'R_ADD';}
 "to"			{return 'R_TO';}
+"delete"		{return 'R_DELETE';}
 
 //select
 "select" 		{return 'R_SELECT';}
@@ -87,6 +99,7 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 "begin"         {return 'R_BEGIN';}
 "else"          {return 'R_ELSE';}
 "end"           {return 'R_END';}
+"update" 		{return 'R_UPDATE';}
 
 
 //palabras reservadas
@@ -108,6 +121,8 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 {variable}       { return 'VARIABLE'; }
 
 // Lo que se ignora
+//{comment}             {/* Ignorar comentarios de una línea */}
+//{comment2}             {console.log('comentario multilinea');/* Ignorar comentarios multilinea */}
 [ \s\r\n\t]             {/* Espacios se ignoran */}
 
 //FIN DE CADENA Y ERRORES
@@ -133,6 +148,9 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 	const CallVar = require('../Interprete/Clases/CallVar.js');
 	//PRINT 
 	const Mostraar = require('../Interprete/Clases/PRINT.js');
+
+	//Casteo: 
+	const Casteo = require('../Interprete/Clases/Casteo.js');
 	const Columnas = require('../Interprete/Tables/Columnas.js');
 	const TableeI = require('../Interprete/Tables/TableeI.js');
 	const InsertIng = require('../Interprete/Tables/InsertIn.js');
@@ -141,6 +159,10 @@ variable  "@"[a-zA-Z][a-zA-Z0-9]*;
 	const AlterT = require('../Interprete/Tables/AlterT.js');
 	const RenameTable = require('../Interprete/Tables/RenameTable.js');
 	const RenameColumn = require('../Interprete/Tables/RenameColumn.js');
+	const SelectTable = require('../Interprete/Tables/SelectTable.js');
+	const ConditionT = require('../Interprete/Tables/CondicionT.js');
+	const UpdateT = require('../Interprete/Tables/UpdateT.js');
+	const DeleteT1= require('../Interprete/Tables/DeleteT.js');
 %}
 
 // Precedencia
@@ -195,14 +217,35 @@ instrucciones
 		 }
 ;
 instruccion
-	: asignaciones1 PCOMA {console.log('asigancion instruccion');}
-	| actualizarV PCOMA {console.log('actualizar variable')}
-	| ifG PCOMA {console.log('if instruccion');}
+	: ifG PCOMA {console.log('if instruccion');}
 	| print PCOMA {console.log('print instruccion');}
 	| createTable PCOMA {console.log('Instruccion createTable');}
 	| insertG PCOMA {console.log('Instruccion insertG');}
 	| alterTable PCOMA {console.log('Instruccion alterTable');}
+	| select PCOMA {console.log('Instruccion select');}
+	| updateG PCOMA {console.log('Instruccion select');}
+	| deletG PCOMA {console.log('Instruccion select');}
+	| beginEnd {console.log('Instruccion beginEnd');}
 	| error PCOMA	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+;
+
+beginEnd 
+	:R_BEGIN instruccionesBegin R_END 
+		{
+			console.log('beginEnd');
+			$$ = $2;
+		}
+;
+
+instruccionesBegin
+	:instruccionesBegin instruccionBegin
+	|instruccionBegin
+;
+
+instruccionBegin
+	:asigancion PCOMA
+	|actualizarV PCOMA
+	|instruccion
 ;
 expresion 	
 	: MENOS expresion %prec UMINUS {
@@ -280,12 +323,19 @@ expresion
 		$$ = new Primitivo(TipoDato.INT,$1,this._$.first_line, this._$.first_column);
 		}
 	| VARCHAR {
-		console.log('VARCHAR: ' +$1.split('"')[1]); 
-		$$ = new Primitivo(TipoDato.VARCHAR,$1.split('"')[1],this._$.first_line, this._$.first_column);
+		
+		console.log('======================================='); 
+		console.log('VARCHAR: ' ,$1.slice(1,-1)); 
+		console.log('======================================='); 
+		$$ = new Primitivo(TipoDato.VARCHAR,$1.slice(1,-1),this._$.first_line, this._$.first_column);
+		
 		}
 	| VARIABLE {
 		console.log('LLAMADO DE VARIABLE: ' +$1); 
 		$$ = new CallVar($1,this._$.first_line, this._$.first_column);
+		}
+	| casteo {
+		$$ = $1;
 		}
 ;
 
@@ -351,10 +401,10 @@ print
 ;
 
 ifG 
-	: R_IF expresion R_THEN R_BEGIN instrucciones R_END
+	: R_IF expresion R_THEN  instrucciones R_END R_IF
 	{
 		console.log(`If: ${$2} valor: ${$5}`);
-		$$ = new IfC($2,$5,this._$.first_line, this._$.first_column);
+		$$ = new IfC($2,$4,this._$.first_line, this._$.first_column);
 	}
 	| R_IF expresion R_THEN  instrucciones R_ELSE instrucciones R_END R_IF{
 
@@ -364,7 +414,10 @@ ifG
 ;
 
 casteo
-	: R_CAST PARA expresion R_AS tipoDato PARC
+	: R_CAST PARA expresion R_AS tipoDato PARC { 
+		console.log('Casteo');
+		$$ = new Casteo($3,$5,this._$.first_line, this._$.first_column);
+	}
 ;
 
 createTable 
@@ -434,7 +487,7 @@ alterTable
 	}
 ;
 
-instAlter 
+instAlter
 	: R_ADD columnasCreate
 	{ 
 		console.log('instAlter add colummn');
@@ -461,7 +514,7 @@ instAlter
 select 
 	: R_SELECT instSelect R_FROM ID where{
 		console.log('select');
-	$$ = new Select($4,$2,$5,this._$.first_line, this._$.first_column);
+		$$ = new SelectTable($4,$2,$5,this._$.first_line, this._$.first_column);
 	}
 	| R_SELECT VARIABLE
 
@@ -478,63 +531,94 @@ instSelect
 		}
 ;
 
-where: R_WHERE expresion{ 
+where
+	: R_WHERE conditions{ 
 	console.log('where');
-	$$ = $2;
+	$$ = $2;}
 	| /*e*/ { 
 		console.log('where');
 		$$ = null;
 	}
-}
+
+;
+	
+conditions 
+	:conditions AND conditions {
+		console.log( 'and' ); 
+		$$ = new ConditionT($1,$3,false,TipoOp.AND,this._$.first_line, this._$.first_column);
+		}
+	| conditions OR conditions {
+		console.log( 'OR' ); 
+		$$ = new ConditionT($1,$3,false,TipoOp.OR,this._$.first_line, this._$.first_column);
+		}
+	| NOT conditions {
+		console.log( 'NOT' ); 
+		$$ = new ConditionT(null,$2,true,TipoOp.NOT,this._$.first_line, this._$.first_column);
+		}
+	| id EQUALS expresion {
+		console.log( 'IGUAL' ); 
+		$$ = new ConditionT($1,$3,false,TipoOp.IGUAL,this._$.first_line, this._$.first_column);
+		}
+
+	| id MAYORK expresion {
+		console.log( 'MAYORK' ); 
+		$$ = new ConditionT($1,$3,false,TipoOp.MAYORK,this._$.first_line, this._$.first_column);
+		}
+	| id MENORK expresion {
+		console.log( 'MENORK' ); 
+		$$ = new ConditionT($1,$3,false,TipoOp.MENORK,this._$.first_line, this._$.first_column);
+		}
+	| id MENORIK expresion {
+		console.log( 'MAYORIK' ); 
+		$$ = new ConditionT($1,$3,false,TipoOp.MENORIK,this._$.first_line, this._$.first_column);
+		}
+	| id MAYORIK expresion {
+		console.log( 'MAYORIK' ); 
+		$$ = new ConditionT($1,$3,false,TipoOp.MAYORIK,this._$.first_line, this._$.first_column);
+		}	
+;
+
+id
+	: ID {
+		console.log('LLAMADO DE ID: ' +$1); 
+		$$ = new Primitivo(TipoDato.ID,$1,this._$.first_line, this._$.first_column);
+	}
+;
+
+updateG 	
+	:R_UPDATE ID R_SET listUpdate where{
+		console.log('updateG');
+		$$ = new UpdateT($2,$4,$5,this._$.first_line, this._$.first_column);
+	}
+;
+
+listUpdate
+	:listUpdate COMA set{ 
+		console.log('listUpdate');
+		$$ = $1;
+		$$.push($3);
+	}
+	|set{ 
+		console.log('listUpdate');
+		$$ = [];
+		$$.push($1);
+	}
+;
+
+set
+	:id EQUALS expresion{ 
+		console.log('set');
+		$$ = [ ];
+		$$.push($1 );
+		$$.push($3 );
+	}
 ;
 
 
+deletG
+	: R_DELETE R_FROM ID where{ 
+		console.log('Delete');
+		$$ = new DeleteT1($3,$4,this._$.first_line, this._$.first_column);
 
-
-        if (this.instruccion == '*' ) {
-            if (this.expresion ==null) {
-                console.log('Select * from ')
-                
-            } else {
-                if (Logicas.includes(this.expresion.tipo)) {
-                    console.log('Select si posee una instruccion logica');
-                    this.expresion.valueId = 'hola';
-                    this.expresion.interpretar(entorno,lista_errores);
-      
-                } else {
-                    console.log('No se puede operar el where con: '+this.expresion.tipo)
-                }                
-                
-            }
-        } else  {
-            if (Logicas.includes(this.expresion.tipo)) {
-                console.log('Select si posee una instruccion logica');
-                 var OpLeft = this.expresion.OpIzq.interpretar(entorno,lista_errores);     
-                 if (OpLeft.tipo = TipoDato.ID) {
-                     var OpRight = this.expresion.OpDer.interpretar(entorno,lista_errores);           
-                    switch (this.expresion.tipo) {
-                        case TipoOp.MAYORIK:
-                            console.log(`${OpLeft.valor} >= ${OpRight.valor}`);
-                            break;
-                        case TipoOp.MAYORK:
-                            console.log(`${OpLeft.valor} > ${OpRight.valor}`);
-                            break;
-                        case TipoOp.MENORIK:
-                            console.log(`${OpLeft.valor} <= ${OpRight.valor}`);
-                            break;
-                        case TipoOp.MENORK:
-                            console.log(`${OpLeft.valor} < ${OpRight.valor}`);
-                            break;
-                            
-                    
-                        default:
-                            break;
-                    }
-                 } else {
-                        console.log('No se puede operar el where con: '+this.expresion.tipo)
-                 }      
-            } else {
-                console.log('No se puede operar el where con: '+this.expresion.tipo)
-            }
-            
-        }
+	}
+;

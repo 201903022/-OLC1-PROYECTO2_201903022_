@@ -1,4 +1,5 @@
 const Instruction = require('./Instruction.js');
+let obtenerContador  = require('../Arbol/datos.js');
 
 //lamar a una variable
 class CallVar extends Instruction{
@@ -23,6 +24,25 @@ class CallVar extends Instruction{
         }else{
             console.log('No se puede llamar esta variable')
         }
+    
+    }
+    generarAst(){ 
+        let node = { 
+            padre: -1, 
+            cadena: ''
+        }
+        let labels = '';
+        let uniones = '';
+        let salida = '';
+        let exp = obtenerContador(); 
+        labels += `${exp} [label="expresion" ]\n`
+        
+        let rId = obtenerContador();
+        labels += `${rId} [label="${this.id}" ]\n`
+        uniones += `${exp} -- ${rId}\n`
+        node.cadena = labels + uniones; 
+        node.padre = exp;
+        return node;
     }
 
 }

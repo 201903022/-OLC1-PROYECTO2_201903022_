@@ -2,6 +2,7 @@ const TipoDato = require('../Enums/TipoDato.js');
 const Dato = require('../Clases/Dato.js');
 const TipoOp = require('../Enums/TipoOp.js');
 const Instruction = require('../Clases/Instruction.js');
+let obtenerContador  = require('../Arbol/datos.js');
 
 
 class Casteo extends Instruction { 
@@ -74,6 +75,46 @@ class Casteo extends Instruction {
         }                                                                                                                                                    
     }
 
+    generarAst(){ 
+        let node = { 
+            padre: -1, 
+            cadena: ''
+        }
+
+        let labels = '';
+        let uniones = '';
+        let salida = '';
+
+        let rexpresion = obtenerContador(); 
+        labels += `${rexpresion} [label="expresion"]\n`
+
+        let castG = obtenerContador(); 
+        labels += `${castG} [label="casteo"]\n`
+        let castR = obtenerContador(); 
+        labels += `${castR} [label="cast"]\n`
+        let asR = obtenerContador(); 
+        labels += `${asR} [label="as"]\n`
+        let exp = this.expresion.generarAst(); 
+        labels += `${exp.cadena}`
+
+        let TipoDato = obtenerContador(); 
+        labels += `${TipoDato} [label="TipoDato"]\n`
+        let tipo = obtenerContador(); 
+        labels += `${tipo} [label="${this.castTo}"]\n`
+        uniones +=`${TipoDato} -- ${tipo}\n`;
+
+        uniones +=`${castG} -- ${castR}\n`;
+        uniones +=`${castG} -- ${exp.padre}\n`;
+        uniones +=`${castG} -- ${asR}\n`;
+        uniones +=`${castG} -- ${TipoDato}\n`;
+        uniones +=`${rexpresion} -- ${castG}\n`;
+        salida = labels + uniones;
+        node.cadena = salida;
+        node.padre = rexpresion;
+        return node;
+
+
+    }
 
 }
 module.exports = Casteo;

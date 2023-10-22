@@ -3,7 +3,13 @@ const Dato = require('../Clases/Dato.js');
 const TipoOp = require('../Enums/TipoOp.js');
 const Instruction = require('../Clases/Instruction.js');
 let obtenerContador  = require('../Arbol/datos.js');
-
+const {
+    agregarSalir,
+    agregarSelect,
+    getSalida,
+    getSeleccion
+  } = require('../Temporales/Temporal.js');
+  
 var Logicas = [
     TipoOp.AND,TipoOp.IGUAL,TipoOp.MAYORIK,
     TipoOp.MAYORK,TipoOp.MENORIK,TipoOp.MENORK,
@@ -144,14 +150,49 @@ class SelectTable extends Instruction {
         }
         console.log('==========================')
         console.log('Columnas: ' ,columnasList);
-        console.log('resultado',resultado)
-        console.log('==========================')
+        console.log('resultado selecteee',resultado);
+        
+        var mark = `${this.tableName}\n`;
+        mark += ''
+        for (let index = 0; index < columnasList.length; index++) {
+            mark += `| ${columnasList[index]} `;
+            if (index + 1 == columnasList.length) {
+                mark += '|'
+                
+            }
+        }
+        
+        mark += '\n';
+        
+        for (let index = 0; index < columnasList.length; index++) {
+            mark += '| --------- ';
+        }
+        
+        mark += '|\n';
+        
+        for (let index = 0; index < resultado.length; index++) {
+            let array = resultado [index];
+            for (let index = 0; index < array.length; index++) {
+                const element = array[index];
+                if (array[index] == null) {
+                    mark += `|    `;
+                    
+                }else{ 
+                    mark += `| ${array[index]} `;
+                }
+                if (index + 1 == array.length) {
+                    mark += '|'
+                    
+                }
+                
+            }
+            mark += '\n';
+        }
 
-
-
-
-
+        console.log('=========================')
+        agregarSelect(mark);
         console.log('-----------------------------------')
+        return mark;
 
     }
 

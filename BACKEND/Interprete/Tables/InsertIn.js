@@ -74,7 +74,7 @@ class InsertIn extends Instruction {
         var auxKeeys = auxTable.getKeyList();
         var auxMap = auxTable.getMapList(0);
         console.log('--------Fin Interpretar Insert--------')
-        
+        return undefined
     }
 
     generarAst(){

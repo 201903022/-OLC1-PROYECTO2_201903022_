@@ -109,7 +109,13 @@ class Expresion extends Instruction {
                         }
              
                     }
-                    
+                    //sumar 2 varchar
+                    else if(OpLeft.tipo == TipoDato.VARCHAR && OpRight.tipo == TipoDato.VARCHAR)
+                    {
+                        var resultado = OpLeft.valor + OpRight.valor;
+                        console.log('Resultado: '+resultado)
+                        return new Dato(resultado,TipoDato.VARCHAR,this.fila,this.columna);
+                    }
                     else { 
                         return new Dato('null', Tipo.NULO, this.linea, this.columna);                        
                     }                    
@@ -149,10 +155,19 @@ class Expresion extends Instruction {
                         }
                         else if(OpLeft.tipo == TipoDato.DOUBLE && OpRight.tipo == TipoDato.DOUBLE)
                         { 
-                            var resultado = OpLeft.valor + OpRight.valor;
+                            var resultado = OpLeft.valor - OpRight.valor;
                             console.log('Resultado: '+resultado);
                             return new Dato(resultado,TipoDato.DOUBLE,this.fila,this.columna);                  
-                        }else { 
+                        }
+                        else if(OpLeft.tipo == TipoDato.VARCHAR && OpRight.tipo == TipoDato.VARCHAR)
+                        { 
+                            var resultado = OpLeft.valor - OpRight.valor;
+                            console.log('Resultado: '+resultado);
+                            return new Dato(resultado,TipoDato.VARCHAR,this.fila,this.columna);                  
+                        }
+                        
+                        
+                        else { 
                             console.log('Error: El tipo de dato: '+OpIzquierdo.tipo+ ' no se puede restar con Tipo: '+OpDerecho.tipo);
                             return new Dato('null', Tipo.NULO, this.linea, this.columna);                        
                         }

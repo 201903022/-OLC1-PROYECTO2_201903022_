@@ -24,6 +24,16 @@ class TableeI extends Instruction{
         
     }
 
+    deleteColumn(posicion){ 
+        for (const miArray of Table1.values()) {
+            if (posicion >= 0 && posicion < miArray.length) {
+              miArray.splice(posicion, 1);
+            } else {
+                //errores.push
+              console.log('La posición a eliminar está fuera de los límites del array.');
+            }
+          }
+    }
     getNewMap(posicion){ 
         var keys 
     }
@@ -177,7 +187,7 @@ class TableeI extends Instruction{
         //Agregarlo al Entorno
         entorno.addTable(this.name,this);
         console.log('------------------------------------');
-
+        return undefined
     }
 
     generarAst(){ 

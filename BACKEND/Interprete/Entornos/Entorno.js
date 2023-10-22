@@ -1,5 +1,8 @@
 
-
+/* 
+Auxiliar: ALex Guerra
+https://github.com/AlexIngGuerra/OLC1-2S2023
+*/
 class Entorno{ 
     constructor(actual,anterior){
         this.actual = actual;
@@ -66,8 +69,13 @@ class Entorno{
     }
 
     addTable(tableName,element){ 
-        console.log(`Agregando tabla: ${tableName} en entorno: ${this.actual}`)
-        this.tablas[tableName] = element;
+        //Agregarlo en el primer entorno: 
+        let e=this;
+        while (e.anterior != null) {
+            e = e.anterior;
+        }
+        e.tablas[tableName] = element;
+        console.log(`Agregando tabla: ${tableName} en entorno: ${e}`)
     }
 
     getTable(tableName){
@@ -96,7 +104,7 @@ class Entorno{
 
 
     }
-
+    
 }
 
 module.exports = Entorno;

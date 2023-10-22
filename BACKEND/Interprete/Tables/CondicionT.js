@@ -126,7 +126,8 @@ class CondicionT extends Instruction {
                             break;
                     }
                 } else {    
-                    
+                    //
+                    console.log('se esperaba un dato fijo')
                 }
                 
 
