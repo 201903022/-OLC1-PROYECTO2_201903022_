@@ -107,6 +107,12 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 //while
 "while" 		{return 'R_WHILE';}
 "do" 			{return 'R_DO';}
+
+
+//CASE
+"case" 			{return 'R_CASE';}
+"when" 			{return 'R_WHEN';}
+
 //palabras reservadas
 "print" 		{return 'R_PRINT';}
 ";" 			{return 'PCOMA';}
@@ -173,6 +179,7 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 	const VariableClass = require('../Interprete/Entornos/Variable.js');
 	const CallId = require('../Interprete/Clases/CallId.js');
 	const WhileT = require('../Interprete/Clases/WhileT.js');
+	const CaseT = require('../Interprete/Clases/Case.js');
 
 %}
 
@@ -239,6 +246,7 @@ instruccion
 	| beginEnd {console.log('Instruccion beginEnd');}
 	| for PCOMA {console.log('Instruccion for');}
 	| while PCOMA {console.log('Instruccion while');}
+	| case PCOMA {console.log('Instruccion case');}
 	| error PCOMA	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
@@ -571,12 +579,14 @@ instSelect
 			console.log('instSelect listColumnas');
 			$$ = $1;
 		}
+		
 ;
 
 where
 	: R_WHERE conditions{ 
 	console.log('where');
-	$$ = $2;}
+	$$ = $2;
+	}
 	| /*e*/ { 
 		console.log('where');
 		$$ = null;
@@ -683,5 +693,42 @@ while
      : R_WHILE expresion R_BEGIN instrucciones R_END { 
 		console.log('While');
 		$$ = new WhileT($2,$4,this._$.first_line, this._$.first_column);
+	}
+;
+
+case 
+	: R_CASE expresion listInstCase R_ELSE expresion R_END as { 
+		console.log('Case');
+		$$ = new CaseT($2,$3,$5,$7,this._$.first_line, this._$.first_column);
+		
+	}
+;
+
+listInstCase 
+	: listInstCase instCase{ 
+		console.log('listInstCase');
+		$$ = $1;
+		$$.push($2);
+	}
+	|instCase{ 
+		console.log('listInstCase');
+		$$ = []; 
+		$$.push($1);
+	}
+;
+
+instCase
+	:  R_WHEN expresion R_THEN expresion{ 
+		console.log('instCase');
+		$$ = [ ]; 
+		$$.push($2 );
+		$$.push($4 );
+	}
+;
+
+as : 
+	R_AS expresion{ 
+		console.log('as');
+		$$ = $2;
 	}
 ;
