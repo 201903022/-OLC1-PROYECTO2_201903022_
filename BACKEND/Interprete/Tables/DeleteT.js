@@ -55,7 +55,8 @@ class DeleteT extends Instruction{
         let labels ='';
         let uniones = '';
         let salida = '';
-
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`
         let DeleteDad = obtenerContador(); 
         labels += `${DeleteDad} [label ="deletG" ]\n`;
         let r_delete = obtenerContador(); 
@@ -73,12 +74,13 @@ class DeleteT extends Instruction{
         uniones += `${DeleteDad} -- ${Id}\n`;
         uniones += `${DeleteDad} -- ${r_where}\n`;
         uniones += `${r_where} -- ${condi.padre}\n`;
+        uniones += `${instPadre} -- ${DeleteDad}\n`;
 
         salida += labels + uniones;
         console.log('===============================')
         console.log(salida)
         node.cadena += labels + uniones;
-        node.padre = DeleteDad;
+        node.padre = instPadre;
         return node;
 
     }

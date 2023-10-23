@@ -17,8 +17,6 @@ class PRINT extends Instruction{
     }
 
     interpretar(entorno,lista_errores){ 
-        console.log('Interpretar Print (' + this.expresion.valor+ ')')
-
         try {
             var valor = this.expresion.interpretar(entorno,lista_errores);
             console.log('clg: ' + valor.valor)
@@ -37,6 +35,8 @@ class PRINT extends Instruction{
             padre:-1,
             cadena:"",
         }
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`
         let exp = this.expresion.generarAst();
         let son = obtenerContador();
         let dad = obtenerContador(); 
@@ -45,8 +45,9 @@ class PRINT extends Instruction{
         `${son}[label="print"] \n`+
         `${dad} -- ${son}\n`+
         `${dad} -- ${exp.padre}\n`;
+        `${instPadre} -- ${dad}\n`;
         console.log(nodo.cadena)
-        nodo.padre = dad;
+        nodo.padre = instPadre;
         return nodo;
     }
 }

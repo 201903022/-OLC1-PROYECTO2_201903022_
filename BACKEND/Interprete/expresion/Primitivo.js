@@ -19,10 +19,6 @@ class Primitivo extends Instruction{
             case TipoDato.DOUBLE:
                 return (new Dato(Number(this.valor),TipoDato.DOUBLE,this.fila,this.columna));
             case TipoDato.VARCHAR:
-                console.log('Tipo de dato ' + typeof this.valor)
-                console.log('Tipo de dato ' + this.tipo);
-                console.log('Varchaaaaaaaaaaaaaaaaaaaaaaar')
-
                 const cadenaFormateada = this.valor.replace(/\\'/g, "'").replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\t/g, '\t').replace(/\\/g, '\\');;
                 return new Dato(cadenaFormateada, TipoDato.VARCHAR, this.fila, this.columna);
             case TipoDato.DATE:

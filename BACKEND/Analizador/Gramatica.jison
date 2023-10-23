@@ -100,7 +100,10 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 "else"          {return 'R_ELSE';}
 "end"           {return 'R_END';}
 "update" 		{return 'R_UPDATE';}
-
+//for
+"for" 			{return 'R_FOR';}
+"in" 			{return 'R_IN';}
+"." 			{return 'DOT';}
 
 //palabras reservadas
 "print" 		{return 'R_PRINT';}
@@ -164,6 +167,10 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 	const UpdateT = require('../Interprete/Tables/UpdateT.js');
 	const DeleteT1= require('../Interprete/Tables/DeleteT.js');
 	const Bloque = require('../Interprete/Clases/BloqueBegin.js');
+	const ForI = require('../Interprete/Clases/ForI.js');
+	const VariableClass = require('../Interprete/Entornos/Variable.js');
+	const CallId = require('../Interprete/Clases/CallId.js');
+
 %}
 
 // Precedencia
@@ -227,6 +234,7 @@ instruccion
 	| updateG PCOMA {console.log('Instruccion select');}
 	| deletG PCOMA {console.log('Instruccion select');}
 	| beginEnd {console.log('Instruccion beginEnd');}
+	| for PCOMA {console.log('Instruccion for');}
 	| error PCOMA	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
@@ -360,6 +368,10 @@ expresion
 		console.log('LLAMADO DE VARIABLE: ' +$1); 
 		$$ = new CallVar($1,this._$.first_line, this._$.first_column);
 		}
+	|ID { 
+		console.log('LLAMADO A UN ID : ' +$1);
+		$$ = new CallId($1,this._$.first_line, this._$.first_column)
+	}
 	| casteo {
 		$$ = $1;
 		}
@@ -648,3 +660,18 @@ deletG
 
 	}
 ;
+
+for
+	: R_FOR idVar R_IN expresion DOT DOT expresion R_BEGIN instrucciones R_END { 
+		console.log('For');
+		$$ = new ForI($2,$4,$7,$9,this._$.first_line, this._$.first_column);
+	}
+; 
+
+idVar
+:  ID {
+		console.log('LLAMADO DE ID: ' +$1); 
+		//ASIG
+		$$ = new VariableClass($1,null,this._$.first_line, this._$.first_column)
+	}
+	;

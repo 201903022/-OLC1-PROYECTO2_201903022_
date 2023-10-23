@@ -36,6 +36,8 @@ class Actualizar extends Instruction{
             padre: -1, 
             cadena: ''
         }
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`        
         let labels = '';
         let uniones = '';
         let Rexp = this.valor.generarAst();
@@ -54,9 +56,11 @@ class Actualizar extends Instruction{
         uniones += `${RactualizarVdad} -- ${Rid}\n`
         uniones += `${RactualizarVdad} -- ${equals}\n`
         uniones += `${RactualizarVdad} -- ${Rexp.padre}\n`
+        uniones += `${instPadre} -- ${RactualizarVdad}\n`
+
 
         node.cadena = labels + uniones; 
-        node.padre = RactualizarVdad;
+        node.padre = instPadre;
         return node;
     }
 }

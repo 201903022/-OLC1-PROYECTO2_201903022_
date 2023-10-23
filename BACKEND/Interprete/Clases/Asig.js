@@ -64,7 +64,8 @@ class Asig extends Instruction{
         let labels = '';
         let uniones = '';
         let salida = ''; 
-        
+        let instDad = obtenerContador()
+        labels += `${instDad} [label="instruccion"]\n`
         let asig = obtenerContador(); 
         labels += `${asig} [label="asignaciones1"]\n`
         if (this.valor != null) {
@@ -111,8 +112,9 @@ class Asig extends Instruction{
             uniones +=`${asig} -- ${listAsignaciones}\n`
 
         }
+        uniones += `${instDad} -- ${asig}`
         node.cadena = labels + uniones;
-        node.padre = asig;
+        node.padre = instDad;
         return node;
 
     }

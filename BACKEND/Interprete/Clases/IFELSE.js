@@ -58,7 +58,8 @@ class IFELSE extends Instruction{
         let labels = '';
         let uniones = '';
         let salida ='';
-
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`
         let expresion = this.condicion.generarAst(); 
         labels += expresion.cadena;
 
@@ -73,31 +74,21 @@ class IFELSE extends Instruction{
         let rInstrucciones = obtenerContador(); 
         labels += `${rInstrucciones} [label="instrucciones"]\n`;
         let array = this.instrucciones; 
-        for (let index = 0; index < this.instrucciones.length; index++) {
-            let rInstruccion = obtenerContador(); 
-            labels += `${rInstruccion} [label="instruccion"]\n`;
-            const element = this.instrucciones[index];
-            console.log(element)
-            let ins =  element.generarAst(); 
-           labels += ins.cadena;
-            uniones += `${rInstruccion} -- ${ins.padre}\n`;
-            uniones += `${rInstrucciones} -- ${rInstruccion}\n`;
-        }
+        array.forEach(element => {
+            let aux = element.generarAst();
+            labels += aux.cadena;
+            uniones += `${instrucciones} -- ${aux.padre}\n`
+        });
         let Resle = obtenerContador(); 
         labels += `${Resle} [label="else"]\n`;
         let rInstrucciones_else = obtenerContador();
         labels += `${rInstrucciones_else} [label="instrucciones_else"]\n`;
         let array_else = this.instrucciones_else;
-        for (let index = 0; index < this.instrucciones_else.length; index++) {
-            let rInstruccion = obtenerContador(); 
-            labels += `${rInstruccion} [label="instruccion"]\n`;
-            const element = this.instrucciones_else[index];
-            console.log(element)
-            let ins =  element.generarAst(); 
-           labels += ins.cadena;
-            uniones += `${rInstruccion} -- ${ins.padre}\n`;
-            uniones += `${rInstrucciones_else} -- ${rInstruccion}\n`;
-        }
+        array_else.forEach(element => {
+            let aux = element.generarAst();
+            labels += aux.cadena;
+            uniones += `${instrucciones} -- ${aux.padre}\n`
+        });
         let Rend = obtenerContador(); 
         labels += `${Rend} [label="end"]\n`;
         let rIf2 = obtenerContador(); 
@@ -111,9 +102,9 @@ class IFELSE extends Instruction{
         uniones += `${IfDad} -- ${rInstrucciones}\n`;
         uniones += `${IfDad} -- ${Rend}\n`;
         uniones += `${IfDad} -- ${rIf2}\n`;
-
+        uniones += `${instPadre} -- ${IfDad}\n`;
         node.cadena = labels + uniones;
-        node.padre = IfDad;
+        node.padre = instPadre;
         return node;
         
     }

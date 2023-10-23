@@ -99,8 +99,9 @@ var renametable = 'update prueba  \n' +
 var updateTable = 'alter table prueba  \n' +
                    'rename to newPrueba;  \n';
 let bloque = ' begin declare @hola int default 10; print "adios" ; if 5 < 10 then print "adios"; end if ; end '                   
+let forf1 = ' for index in 1 .. 5 begin print index+100 ; end; ';
 entradaTable += inseret +inseret2+renametable ;
-var resultado = parser.parse(bloque);
+var resultado = parser.parse(forf1);
 var lista_errores = [];
 resultado.forEach(element => {
     element.interpretar(EntornoGlobal,lista_errores);

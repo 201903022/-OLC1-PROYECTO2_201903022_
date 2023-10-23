@@ -32,7 +32,8 @@ class BloqueBegin extends Instruction {
         let labels = '';
         let uniones = '';
         let salida = '';  
-        
+        let instDad = obtenerContador()
+        labels += `${instDad} [label="instruccion"]\n`       
         let beginEnd = obtenerContador();
         labels += `${beginEnd}[label="beginEnd"];\n`;
 
@@ -55,8 +56,10 @@ class BloqueBegin extends Instruction {
             labels += hijo.cadena;
             uniones += `${RinstB} -- ${hijo.padre};\n`
         }
+        //unir padre con beginEnd
+        uniones += `${instDad} -- ${beginEnd};\n`
         node.cadena = labels + uniones; 
-        node.padre = beginEnd; 
+        node.padre = instDad; 
         return node; 
 
     }

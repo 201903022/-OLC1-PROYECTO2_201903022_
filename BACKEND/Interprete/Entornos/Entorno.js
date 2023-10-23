@@ -8,6 +8,7 @@ class Entorno{
         this.actual = actual;
         this.anterior = anterior;
         this.variables = {};
+        this.variablesId = new Map();
         this.funciones = {}; 
         this.tablas = {};         
         //imprimir
@@ -15,8 +16,12 @@ class Entorno{
     }
 
     addVariable(variable){
-        console.log(`Agregando variable: ${variable} en entorno: ${this.actual}`)
+        console.log(`Agregando variable: ${variable.id} en entorno: ${this.actual}`)
         this.variables[variable.id] = variable;
+    }
+    addId(id){ 
+        console.log(`Agregando id: ${id.id} en entorno: ${this.actual}`)
+        this.variablesId.set(id.id,null);
     }
 
     actualizarVariable(id,valor){
@@ -27,6 +32,8 @@ class Entorno{
                 //Comprobar si son del mismo tipo                
                 console.log(`e.variables[id].tipo ${e.variables[id].tipo} == valor.tipo: ${valor.tipo}`)
                 if (e.variables[id].tipo == valor.tipo) {
+                      
+                    console.log(e.variables[id].valor ,  valor)
                     e.variables[id].valor = valor;
                     return true;                    
                 } else {
@@ -37,11 +44,31 @@ class Entorno{
             }
         }
     }
+    actualizarId(id,valor) { 
+        console.log(`Actualizar id: ${id} ${valor}`)
+        for(let e = this; e != null; e = e.anterior){
+            if(e.variablesId.has(id) ){
+                console.log(`Se encontro a ${id}`)
+                //Comprobar si son del mismo tipo  
+                e.variablesId.set(id,valor);
 
+            }
+        }        
+
+    }
     getVariable(id){
         for(let e = this; e != null; e = e.anterior){
             if(e.variables[id] != null){
                 return e.variables[id];
+            }
+        }
+        return null;
+    }
+
+    getId(id){ 
+        for(let e = this; e != null; e = e.anterior){
+            if(e.variablesId.has(id)){
+                return e.variablesId.get(id);
             }
         }
         return null;
@@ -61,7 +88,13 @@ class Entorno{
                         console.log(`Variable: ${key} = null`)
                     }
                 }
+
+                for (const [key,value]of this.variablesId){ 
+                    console.log(`Id: ${key} = ${value}`)
+                }
+
             }
+
         } catch (error) {
             console.log(error)
             
@@ -101,8 +134,6 @@ class Entorno{
         console.log(`Renombrando tabla: ${tableName} en entorno: ${this.actual}`)
         this.tablas[newTableName] = this.tablas[tableName];
         delete this.tablas[tableName];
-
-
     }
     
 }

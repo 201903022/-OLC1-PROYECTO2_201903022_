@@ -64,20 +64,16 @@ class IF extends Instruction{
         labels += `${Rif} [label="if"]\n`;
         let Rthen = obtenerContador(); 
         labels += `${Rthen} [label="then"]\n`;
-
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`
         let rInstrucciones = obtenerContador(); 
         labels += `${rInstrucciones} [label="instrucciones"]\n`;
         let array = this.instrucciones; 
-        for (let index = 0; index < this.instrucciones.length; index++) {
-            let rInstruccion = obtenerContador(); 
-            labels += `${rInstruccion} [label="instruccion"]\n`;
-            const element = this.instrucciones[index];
-            console.log(element)
-            let ins =  element.generarAst(); 
-           labels += ins.cadena;
-            uniones += `${rInstruccion} -- ${ins.padre}\n`;
-            uniones += `${rInstrucciones} -- ${rInstruccion}\n`;
-        }
+        array.forEach(element => {
+            let aux = element.generarAst();
+            labels += aux.cadena;
+            uniones += `${instrucciones} -- ${aux.padre}\n`
+        });
 
         let Rend = obtenerContador(); 
         labels += `${Rend} [label="end"]\n`;
@@ -92,9 +88,11 @@ class IF extends Instruction{
         uniones += `${IfDad} -- ${rInstrucciones}\n`;
         uniones += `${IfDad} -- ${Rend}\n`;
         uniones += `${IfDad} -- ${rIf2}\n`;
+        uniones += `${instPadre} -- ${IfDad}\n`;
 
+        
         node.cadena = labels + uniones;
-        node.padre = IfDad;
+        node.padre = instPadre;
         return node;
         
     }

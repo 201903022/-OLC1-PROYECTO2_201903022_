@@ -37,6 +37,9 @@ class AlterT extends Instruction{
         let uniones = '';
         let salida ='';
 
+        //instPadre
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`
         let alterTable = obtenerContador() ;
         labels += alterTable+' [label="ALTER_TABLE"];\n';
         let alterR = obtenerContador(); 
@@ -59,11 +62,12 @@ class AlterT extends Instruction{
         uniones += `${alterTable} -- ${tableR}\n`;
         uniones += `${alterTable} -- ${tableName}\n`;
         uniones += `${alterTable} -- ${instAlerR}\n`;
+        uniones += `${instPadre} -- ${alterTable}\n`;
 
         salida = labels + uniones; 
         console.log(salida)
         node.cadena = salida;
-        node.padre = alterTable;
+        node.padre = instPadre;
         return node;
 
 

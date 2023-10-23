@@ -80,6 +80,8 @@ class UpdateT extends Instruction{
         let salida = '';
         let labels = '';
         let uniones = '';
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`        
         let Rupdate = obtenerContador(); 
         let RId = obtenerContador();
         let IdValue = obtenerContador();
@@ -134,12 +136,14 @@ class UpdateT extends Instruction{
         uniones += `${updatePadre} -- ${Rwhere}\n`
         let condicion1 = this.condicion.generarAst();
         uniones += `${Rconditions} -- ${condicion1.padre}\n`
-        uniones += `${updatePadre} -- ${Rconditions}\n`
+        uniones += `${Rconditions} -- ${condicion1.padre}\n`
+        uniones += `${instPadre} -- ${updatePadre}\n`
 
         salida += labels;
         salida += uniones;
         node.cadena += salida;
         console.log(salida)
+        node.padre = instPadre;
         return node;
 
 

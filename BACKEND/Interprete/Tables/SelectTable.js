@@ -205,7 +205,8 @@ class SelectTable extends Instruction {
         let labels = '';
         let uniones = '';
         let salida = '';
-
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`
         let SelectDad = obtenerContador();
         labels += `${SelectDad} [label="SelectG"]\n`
         let Rselect = obtenerContador();
@@ -260,12 +261,12 @@ class SelectTable extends Instruction {
         } else {
             
         }
-        
+        uniones += `${instPadre} -- ${SelectDad}`
         salida += labels + uniones;
         console.log('==================================')
         console.log(salida)
         node.cadena = salida;
-        node.padre = SelectDad;
+        node.padre = instPadre;
         return node;
         //      
         //Select *from Id where?null

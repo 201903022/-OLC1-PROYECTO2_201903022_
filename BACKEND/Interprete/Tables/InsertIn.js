@@ -85,7 +85,8 @@ class InsertIn extends Instruction {
         var labels = '';
         var uniones = '';
         var salida = ``;
-        
+        let instPadre = obtenerContador(); 
+        labels += `${instPadre} [label="instruccion" ]\n`      
         let IDvalue = obtenerContador();
         let Rinsert = obtenerContador(); 
         let Rinto = obtenerContador(); 
@@ -173,11 +174,13 @@ class InsertIn extends Instruction {
         uniones += `${InsertPadre} -- ${parA}\n`
         uniones += `${InsertPadre} -- ${valuesR}\n`
         uniones += `${InsertPadre} -- ${parC}\n`
+        uniones += `${instPadre} -- ${InsertPadre}\n`
+
         salida += labels;
         salida += uniones;
         console.log(salida); 
         node.cadena = salida;
-        node.padre = InsertPadre;
+        node.padre = instPadre;
         return node;
     }
 }
