@@ -77,17 +77,17 @@ class IFELSE extends Instruction{
         array.forEach(element => {
             let aux = element.generarAst();
             labels += aux.cadena;
-            uniones += `${instrucciones} -- ${aux.padre}\n`
+            uniones += `${rInstrucciones} -- ${aux.padre}\n`
         });
         let Resle = obtenerContador(); 
         labels += `${Resle} [label="else"]\n`;
         let rInstrucciones_else = obtenerContador();
-        labels += `${rInstrucciones_else} [label="instrucciones_else"]\n`;
+        labels += `${rInstrucciones_else} [label="instrucciones"]\n`;
         let array_else = this.instrucciones_else;
         array_else.forEach(element => {
             let aux = element.generarAst();
             labels += aux.cadena;
-            uniones += `${instrucciones} -- ${aux.padre}\n`
+            uniones += `${rInstrucciones_else} -- ${aux.padre}\n`
         });
         let Rend = obtenerContador(); 
         labels += `${Rend} [label="end"]\n`;

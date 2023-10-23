@@ -112,7 +112,7 @@ class Asig extends Instruction{
             uniones +=`${asig} -- ${listAsignaciones}\n`
 
         }
-        uniones += `${instDad} -- ${asig}`
+        uniones += `${instDad} -- ${asig}\n`
         node.cadena = labels + uniones;
         node.padre = instDad;
         return node;

@@ -1,6 +1,6 @@
 const parser = require('./Analizador/Parser.js')
 let obtenerContador  = require('./Interprete/Arbol/datos.js');
-
+const fs = require('fs');
 const Entorno = require('./Interprete/Entornos/Entorno.js');
 const variablee = require('./Interprete/Entornos/Variable.js');
 var entrada = 'if 5 < 10 then print "adios"; end if ;  '
@@ -14,6 +14,7 @@ resultado.forEach(element => {
     element.generarAst();
 });
 function generarAstdot(){ 
+    let filePath = './Interprete/Arbol/Arbol.dot'
     let array = resultado;
     let graphviz = 'graph AST{ \n ordering = "out" \n';
     let label = '';
@@ -31,15 +32,38 @@ function generarAstdot(){
         label += `${InstructionR} [label="Instruction"]\n`
         uniones += `${InstructionR} -- ${element.padre}\n`
         uniones += `${listInstrucciones} -- ${InstructionR}\n`
-
-        console.log('generarAsdtro')
     }
     graphviz += label;
     graphviz += uniones;
     graphviz += '}\n'
     console.log(graphviz)
+    fs.access( filePath,fs.constants.F_OK, (err) => { 
+        if (err) {
+            console.log('no existe')
+            fs.writeFile(filePath,graphviz,(err) => { 
+                if (err) {
+                    console.log('error al escribir')
+                }else{
+                    console.log('se escribio correctamente')
+                }
+            })
+        }else{
+            console.log('existe')
+            fs.writeFile(filePath,graphviz,(err) => { 
+                if (err) {
+                    console.log('error al escribir')
+                }else{
+                    console.log('se escribio correctamente')
+                }
+            })
+        }
+    } )
+    
+  
 }
 
 
 console.log(resultado)
 generarAstdot();
+
+module.exports = generarAstdot();

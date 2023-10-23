@@ -72,7 +72,7 @@ class IF extends Instruction{
         array.forEach(element => {
             let aux = element.generarAst();
             labels += aux.cadena;
-            uniones += `${instrucciones} -- ${aux.padre}\n`
+            uniones += `${rInstrucciones} -- ${aux.padre}\n`
         });
 
         let Rend = obtenerContador(); 

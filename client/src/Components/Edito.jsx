@@ -67,9 +67,42 @@ function Edito ({content,onContentChange}) {
         };
         console.log('a \n' + fileContent)
         reader.readAsText(file); // Para leer el archivo como texto (puedes usar otros métodos para diferentes tipos de archivos)
-      };
+    };
+
+    const generarAst = () => { 
+        axios.post(url+'/createImage',{
+            entrada:code
+        }).then(
+            response => {
+                console.log('respuesta: ' + response.data.message)
+                var tables1 = response.data.tables;
+                var message = response.data.message;
+                if (tables1 == '') {
+                    console.log('no tables')
+                } else {
+                    setTables(tables1);
+                    console.log(tables)
+                }
+                if (message != '') {
+                    setOutPut( response.data.message);
+                    
+                } else {
+                    console.log('no message')
+                }
+                
+                //setOutPut(response.data.tables);
+
+            }
+        ).catch(
+            error => {
+                console.log('adios');
+                console.log(error);
+            }
+        )
+    }
     
-    
+
+
     
     return ( 
         
@@ -104,7 +137,7 @@ function Edito ({content,onContentChange}) {
             <div className='button'>
             <input type="file" onChange={handleFileSelect} />
                 <button className='btn1' onClick={AnalyzeCode} > Run </button>
-                <button className='btn2'> Generate Tree </button>
+                <button className='btn2'onClick={generarAst} > Generate Tree </button>
             </div>
             </div>
         

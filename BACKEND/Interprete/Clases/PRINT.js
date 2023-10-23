@@ -36,16 +36,16 @@ class PRINT extends Instruction{
             cadena:"",
         }
         let instPadre = obtenerContador(); 
-        labels += `${instPadre} [label="instruccion" ]\n`
         let exp = this.expresion.generarAst();
         let son = obtenerContador();
         let dad = obtenerContador(); 
         nodo.cadena = exp.cadena + 
+        `${instPadre}[label="instruccion"]\n`+ 
         `${dad}[label="PRINT"]\n`+ 
         `${son}[label="print"] \n`+
         `${dad} -- ${son}\n`+
-        `${dad} -- ${exp.padre}\n`;
-        `${instPadre} -- ${dad}\n`;
+        `${dad} -- ${exp.padre}\n`+
+        `${instPadre} -- ${dad}\n`
         console.log(nodo.cadena)
         nodo.padre = instPadre;
         return nodo;

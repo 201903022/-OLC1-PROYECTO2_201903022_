@@ -196,7 +196,6 @@ class TableeI extends Instruction{
             cadena:"",
         }
         let instPadre = obtenerContador()
-        let labels = `${instPadre} [label="instruccion"]\n`
         let create1 = obtenerContador();
         let createR = obtenerContador(); 
         let rTable = obtenerContador();
@@ -267,7 +266,8 @@ class TableeI extends Instruction{
         }  {
         
         }
-        cadena += `${create1} -- ${createR} \n`
+        cadena += `${create1} -- ${createR} \n` 
+        cadena += `${instPadre} [label="instruccion"]\n` 
         cadena += `${create1} -- ${rTable} \n` 
         cadena += `${create1} -- ${id} \n` 
         cadena += `${create1} -- ${parA} \n` 

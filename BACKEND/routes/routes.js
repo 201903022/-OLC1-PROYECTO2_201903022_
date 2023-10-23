@@ -7,5 +7,6 @@ router.get('/', controler.index);
 router.post('/analizar', controler.analizar);
 router.get('/getData', controler.getData);
 router.post('/addData', controler.addData);
-
+router.get('/getImage',controler.sendImage);
+router.post('/createImage',controler.createImage);
 module.exports=router;

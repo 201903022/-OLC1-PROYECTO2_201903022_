@@ -104,7 +104,9 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 "for" 			{return 'R_FOR';}
 "in" 			{return 'R_IN';}
 "." 			{return 'DOT';}
-
+//while
+"while" 		{return 'R_WHILE';}
+"do" 			{return 'R_DO';}
 //palabras reservadas
 "print" 		{return 'R_PRINT';}
 ";" 			{return 'PCOMA';}
@@ -170,6 +172,7 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 	const ForI = require('../Interprete/Clases/ForI.js');
 	const VariableClass = require('../Interprete/Entornos/Variable.js');
 	const CallId = require('../Interprete/Clases/CallId.js');
+	const WhileT = require('../Interprete/Clases/WhileT.js');
 
 %}
 
@@ -235,6 +238,7 @@ instruccion
 	| deletG PCOMA {console.log('Instruccion select');}
 	| beginEnd {console.log('Instruccion beginEnd');}
 	| for PCOMA {console.log('Instruccion for');}
+	| while PCOMA {console.log('Instruccion while');}
 	| error PCOMA	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
@@ -675,3 +679,9 @@ idVar
 		$$ = new VariableClass($1,null,this._$.first_line, this._$.first_column)
 	}
 	;
+while 
+     : R_WHILE expresion R_BEGIN instrucciones R_END { 
+		console.log('While');
+		$$ = new WhileT($2,$4,this._$.first_line, this._$.first_column);
+	}
+;
