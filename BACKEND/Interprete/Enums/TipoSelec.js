@@ -1,5 +1,5 @@
 const TipoSelect = { 
-    'LISTADODI': 'LISTADODI',
+    'LISTADOID': 'LISTADOID',
     'LISTADOEXP':'LISTADOEXP',
     'ALL':'ALL'
 }

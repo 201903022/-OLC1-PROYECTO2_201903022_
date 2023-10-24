@@ -9,6 +9,10 @@ const {
     getSalida,
     getSeleccion
   } = require('../Temporales/Temporal.js');
+
+let goElseG = true; 
+let contador = 0; 
+
 //exp1 = expresion.interpretar(); 
 //expresiones = [[when,then],[when,then]]
 //elses = [else,then]
@@ -52,9 +56,12 @@ class CaseT extends Instruction{
                 //console.log('resultado',exp3);
                 resultado = [exp3.valor];
                 goElse=false;
+                goElse = false;
                 return;
                 
-            }    
+            }  
+            contador++; 
+
         });
 
         if (goElse) {

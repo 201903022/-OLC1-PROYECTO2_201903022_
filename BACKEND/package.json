@@ -1,14 +1,13 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node pruebas.js",
     "pruebaas": "node pruebas.js",
-    "arbol":"node Arbolg.js",
-    "prueba":"node Pruebast.js",
+    "arbol": "node Arbolg.js",
+    "prueba": "node Pruebast.js",
     "generar": "jison ./Analizador/Gramatica.jison -o ./Analizador/Parser.js",
     "dev": "nodemon index.js"
   },
@@ -23,5 +22,6 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  }
+  },
+  "description": ""
 }

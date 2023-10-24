@@ -100,7 +100,18 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 "else"          {return 'R_ELSE';}
 "end"           {return 'R_END';}
 "update" 		{return 'R_UPDATE';}
+//for
+"for" 			{return 'R_FOR';}
+"in" 			{return 'R_IN';}
+"." 			{return 'DOT';}
+//while
+"while" 		{return 'R_WHILE';}
+"do" 			{return 'R_DO';}
 
+
+//CASE
+"case" 			{return 'R_CASE';}
+"when" 			{return 'R_WHEN';}
 
 //palabras reservadas
 "print" 		{return 'R_PRINT';}
@@ -163,6 +174,13 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 	const ConditionT = require('../Interprete/Tables/CondicionT.js');
 	const UpdateT = require('../Interprete/Tables/UpdateT.js');
 	const DeleteT1= require('../Interprete/Tables/DeleteT.js');
+	const Bloque = require('../Interprete/Clases/BloqueBegin.js');
+	const ForI = require('../Interprete/Clases/ForI.js');
+	const VariableClass = require('../Interprete/Entornos/Variable.js');
+	const CallId = require('../Interprete/Clases/CallId.js');
+	const WhileT = require('../Interprete/Clases/WhileT.js');
+	const CaseT = require('../Interprete/Clases/Case.js');
+
 %}
 
 // Precedencia
@@ -217,7 +235,7 @@ instrucciones
 		 }
 ;
 instruccion
-	: ifG PCOMA {console.log('if instruccion');}
+	:ifG PCOMA {console.log('if instruccion');}
 	| print PCOMA {console.log('print instruccion');}
 	| createTable PCOMA {console.log('Instruccion createTable');}
 	| insertG PCOMA {console.log('Instruccion insertG');}
@@ -226,26 +244,54 @@ instruccion
 	| updateG PCOMA {console.log('Instruccion select');}
 	| deletG PCOMA {console.log('Instruccion select');}
 	| beginEnd {console.log('Instruccion beginEnd');}
+	| for PCOMA {console.log('Instruccion for');}
+	| while PCOMA {console.log('Instruccion while');}
+	| case PCOMA {console.log('Instruccion case');}
 	| error PCOMA	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 beginEnd 
-	:R_BEGIN instruccionesBegin R_END 
+:R_BEGIN instruccionesBegin R_END 
 		{
 			console.log('beginEnd');
-			$$ = $2;
+			$$ = new Bloque($2,this._$.first_line, this._$.first_column);
 		}
 ;
 
 instruccionesBegin
 	:instruccionesBegin instruccionBegin
-	|instruccionBegin
+	{
+		console.log('instrucciones instruccionBegin');		
+	    $$ = $1;
+			if (Array.isArray($2)) {
+				$1.forEach(element => {
+				   $$.push(element);
+				});
+				//console.log("JISON miVariable es un arreglo.");
+			} else {
+				//console.log(" JISON miVariable no es un arreglo.");
+				$$.push($2);
+			}	
+	}
+	|instruccionBegin{ 
+		console.log('instruccionBegin');
+	    $$ = []; 
+			if (Array.isArray($1)) {
+				$1.forEach(element => {
+				   $$.push(element);
+				});
+				//console.log("JISON miVariable es un arreglo.");
+			} else {
+				//console.log(" JISON miVariable no es un arreglo.");
+	   			$$.push($1);
+			}	
+	}
 ;
 
 instruccionBegin
-	:asigancion PCOMA
-	|actualizarV PCOMA
-	|instruccion
+	:asignaciones1 PCOMA {console.log('asigancion');}
+	|actualizarV PCOMA {console.log('actualizarV');}
+	|instruccion	
 ;
 expresion 	
 	: MENOS expresion %prec UMINUS {
@@ -334,6 +380,10 @@ expresion
 		console.log('LLAMADO DE VARIABLE: ' +$1); 
 		$$ = new CallVar($1,this._$.first_line, this._$.first_column);
 		}
+	|ID { 
+		console.log('LLAMADO A UN ID : ' +$1);
+		$$ = new CallId($1,this._$.first_line, this._$.first_column)
+	}
 	| casteo {
 		$$ = $1;
 		}
@@ -529,12 +579,14 @@ instSelect
 			console.log('instSelect listColumnas');
 			$$ = $1;
 		}
+		
 ;
 
 where
 	: R_WHERE conditions{ 
 	console.log('where');
-	$$ = $2;}
+	$$ = $2;
+	}
 	| /*e*/ { 
 		console.log('where');
 		$$ = null;
@@ -620,5 +672,67 @@ deletG
 		console.log('Delete');
 		$$ = new DeleteT1($3,$4,this._$.first_line, this._$.first_column);
 
+	}
+;
+
+for
+	: R_FOR idVar R_IN expresion DOT DOT expresion R_BEGIN instrucciones R_END { 
+		console.log('For');
+		$$ = new ForI($2,$4,$7,$9,this._$.first_line, this._$.first_column);
+	}
+; 
+
+idVar
+:  ID {
+		console.log('LLAMADO DE ID: ' +$1); 
+		//ASIG
+		$$ = new VariableClass($1,null,this._$.first_line, this._$.first_column)
+	}
+	;
+while 
+     : R_WHILE expresion R_BEGIN instrucciones R_END { 
+		console.log('While');
+		$$ = new WhileT($2,$4,this._$.first_line, this._$.first_column);
+	}
+;
+
+case 
+	: R_CASE expresion listInstCase R_ELSE expresion R_END as { 
+		console.log('Case');
+		$$ = new CaseT($2,$3,$5,$7,this._$.first_line, this._$.first_column);
+		
+	}
+;
+
+listInstCase 
+	: listInstCase instCase{ 
+		console.log('listInstCase');
+		$$ = $1;
+		$$.push($2);
+	}
+	|instCase{ 
+		console.log('listInstCase');
+		$$ = []; 
+		$$.push($1);
+	}
+;
+
+instCase
+	:  R_WHEN expresion R_THEN expresion{ 
+		console.log('instCase');
+		$$ = [ ]; 
+		$$.push($2 );
+		$$.push($4 );
+	}
+;
+
+as : 
+	R_AS expresion{ 
+		console.log('as');
+		$$ = $2;
+	}
+	| /* e */ { 
+		console.log('as');
+		$$ = null;
 	}
 ;

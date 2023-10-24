@@ -99,10 +99,10 @@ var renametable = 'update prueba  \n' +
 var updateTable = 'alter table prueba  \n' +
                    'rename to newPrueba;  \n';
 let bloque = ' begin declare @hola int default 10; print "adios" ; if 5 < 10 then print "adios"; end if ; end '                   
-let forf1 = ' for index in 1 .. 5 begin print index+100 ; end; ';
+let forf1 = ' for @index in 1 .. 5 begin print "nadaaaaaaaaaaaa" ; end; ';
 let while1 = 'begin declare @hola int default 0;  while @hola <= 10 begin print "adios";  begin set @hola = @hola + 1; end end;     end '
 entradaTable += inseret +inseret2+renametable ;
-var resultado = parser.parse(while1);
+var resultado = parser.parse(forf1);
 var lista_errores = [];
 resultado.forEach(element => {
     element.interpretar(EntornoGlobal,lista_errores);

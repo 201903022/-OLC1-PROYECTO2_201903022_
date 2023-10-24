@@ -4,6 +4,7 @@ const TipoOp = require('../Enums/TipoOp.js');
 const Instruction = require('../Clases/Instruction.js');
 let obtenerContador  = require('../Arbol/datos.js');
 let Entorno = require('../Entornos/Entorno.js');
+const Asig = require('../Clases/Asig.js');
 class ForI extends Instruction { 
     constructor(id,from,to,instrucciones, fila,columna) { 
         super(); 
@@ -18,12 +19,18 @@ class ForI extends Instruction {
     interpretar(entorno,lista_errores){ 
         console.log('===========================================')
         let entorno1 = new Entorno("entornoFor",entorno);
+        
         console.log('Interpretar For '); 
         let i = this.from.interpretar(entorno,lista_errores).valor;
         let contador = this.to.interpretar(entorno,lista_errores).valor;
-        entorno1.addId(this.id);
+        let AsigId = new Asig(this.id,null,TipoDato.INT,this.fila,this.columna); 
+        AsigId.interpretar(entorno1,lista_errores);
+        
+        //entorno1.addId(this.id);
         for (let index = i; index < contador; index++) {
-            entorno1.actualizarId(this.id.id ,index);
+            //entorno1.actualizarId(this.id.id ,index);
+            let exp = new Dato(index,TipoDato.INT,this.fila,this.columna);
+            entorno1.actualizarVariable(this.id, exp);
             this.instrucciones.forEach(element => {
                 element.interpretar(entorno1,lista_errores);
             });
