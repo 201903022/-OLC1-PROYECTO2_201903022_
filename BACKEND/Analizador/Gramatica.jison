@@ -180,8 +180,9 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 	const CallId = require('../Interprete/Clases/CallId.js');
 	const WhileT = require('../Interprete/Clases/WhileT.js');
 	const CaseT = require('../Interprete/Clases/Case.js');
-	const TipoSelect = require('../Interprete/Enums/TipoSelec.js');
+	const TypeSelect = require('../Interprete/Enums/TipoSelec.js');1
 	var tipoSelectVar = '';
+	const Sucio1 = require('../Interprete/Sucio/Sucio.js');
 
 %}
 
@@ -246,7 +247,7 @@ instruccion
 	|select2 PCOMA {console.log('Instruccione select 2')}
 	| updateG PCOMA {console.log('Instruccion select');}
 	| deletG PCOMA {console.log('Instruccion select');}
-	| beginEnd {console.log('Instruccion beginEnd');}
+	| beginEnd PCOMA{console.log('Instruccion beginEnd');}
 	| for PCOMA {console.log('Instruccion for');}
 	| while PCOMA {console.log('Instruccion while');}
 	| case PCOMA {console.log('Instruccion case');}
@@ -583,22 +584,29 @@ instSelect
 
 
 select2
-		:R_SELECT listado from
+		:R_SELECT listado from{ 
+			console.log('select2');
+			$$ = new Sucio1(tipoSelectVar,$2,$3,this._$.first_line, this._$.first_column);
+
+		}
 ;
 
 listado	
 		:listExp{ 
+			tipoSelectVar =TypeSelect.LISTEXP;
 			console.log('listado');
 			$$ = $1;
 		}
-		|listColumnas{ 
+		|listColumnsSelec{ 
+			tipoSelectVar =TypeSelect.LISTCOLUMNS;
 			console.log('listado');
 			$$ = $1;
 		}
 		|POR{ 
 			console.log('instSelect *');
+			tipoSelectVar =TypeSelect.ALL;
+			console.log('TipSelectVar: ', tipoSelectVar)
 			$$ = '*';
-			//tipoSelectVar =TipoSelect.ALL;
 		}
 ;
 
@@ -607,6 +615,7 @@ listColumnsSelec
 			console.log('listColumnsSelec');
 			$$ = $1;
 			$$.push($3);
+			//[[id,nuevoNombre]]
 		}
 		|columnsSelec{ 
 			console.log('listColumnsSelec');
@@ -618,12 +627,14 @@ listColumnsSelec
 columnsSelec
    : ID as{ 
 		console.log('columnsSelec');
+		//tipoSelectVar =TypeSelect.LISTADOID;
 		$$ = [];
 		$$.push($1);
 		$$.push($2);
-		//tipoSelectVar =TipoSelect.LISTADOID;
+		//[id,nuevoNombre]
    }
 ;
+
 listExp 
 		:listExp COMA expSelect{ 
 			console.log('listExp');
@@ -636,18 +647,6 @@ listExp
 			$$.push($1);
 		}
 ;
-
-expSelect
-		:expresion as{ 
-			console.log('expSelect');
-			$$ = [];
-			$$.push($1);
-			$$.push($2);
-		}
-		//tipoSelectVar =TipoSelect.LISTADOEXP;
-;
-
-
 //[[tableName,condition]]
 from
 	: R_FROM ID where { 
@@ -656,7 +655,23 @@ from
 		$$.push($3);
 		console.log('from');
 	}
+	| /* */ { 
+		$$ = null;
+		console.log('from');
+	}
 ;
+expSelect
+		:expresion as{ 
+			console.log('expSelect');
+			$$ = [];
+			$$.push($1);
+			$$.push($2);
+		}
+;
+//select exp as "resultado"  ; 
+
+
+
 
 
 where
@@ -808,6 +823,7 @@ instCase
 as : 
 	R_AS expresion{ 
 		console.log('as');
+		console.log('exp ',$2)
 		$$ = $2;
 	}
 	| /* e */ { 

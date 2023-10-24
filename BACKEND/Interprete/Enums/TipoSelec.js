@@ -1,7 +1,7 @@
-const TipoSelect = { 
-    'LISTADOID': 'LISTADOID',
-    'LISTADOEXP':'LISTADOEXP',
-    'ALL':'ALL'
+const TypeSelect1 = {
+    'ALL' : 'ALL',
+    'LISTCOLUMNS' : 'LISTCOLUMNS',
+    'LISTEXP' : 'LISTEXP'
 }
 
-moudule.exports = TipoSelect;
+module.exports = TypeSelect1;

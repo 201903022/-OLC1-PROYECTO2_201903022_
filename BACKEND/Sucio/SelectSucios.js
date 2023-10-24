@@ -1,14 +1,14 @@
-const TipoDato = require('../Enums/TipoDato.js');
-const Dato = require('../Clases/Dato.js');
-const TipoOp = require('../Enums/TipoOp.js');
-const Instruction = require('../Clases/Instruction.js');
-let obtenerContador  = require('../Arbol/datos.js');
+const TipoDato = require('../Interprete/Enums/TipoDato.js');
+const Dato = require('../Interprete/Clases/Dato.js');
+const TipoOp = require('../Interprete/Enums/TipoOp.js');
+const Instruction = require('../Interprete/Clases/Instruction.js');
+let obtenerContador  = require('../Interprete/Arbol/datos.js');
 const {
     agregarSalir,
     agregarSelect,
     getSalida,
     getSeleccion
-  } = require('../Temporales/Temporal.js');
+  } = require('../Interprete/Temporales/Temporal.js');
   
 var Logicas = [
     TipoOp.AND,TipoOp.IGUAL,TipoOp.MAYORIK,
@@ -26,11 +26,24 @@ class SelectSucio extends Instruction {
     }
     interpretar(entorno,lista_errores){ 
         console.log('--------Interpretar Select--------');
-        console.log('this.instruccion: ',this.instruccion);
-        console.log('this.tableName: ',this.tableName);
-        console.log('this.expresion: ',this.expresion);
-        console.log('this.fila: ',this.fila);
-        console.log('this.columna: ',this.columna);
+        console.log(`TipoSelect ${this.tipoSelect}`);
+        this.tableName != null ? console.log(this.tableName): console.log(
+            'No se encontro el nombre de la tabla'
+        )
+        this.instruccion != null ? console.log(this.instruccion): console.log(
+            'No se encontro la lista de columnas'
+        )
+        this.expresion != null ? console.log(this.expresion): console.log(
+            'No se encontro la expresion'
+        )
+        this.fila != null ? console.log(this.fila): console.log(
+            'No se encontro la fila'
+        )
+        this.columna != null ? console.log(this.columna): console.log(
+            'No se encontro la columna'
+        )
+
+
 
         // Comprobar si la instruccion es igual a asteristo if instruccion == *
 

@@ -53,36 +53,7 @@ class SelectTable extends Instruction {
                 }    
             } else {
                 console.log(`Table size: ${tableSize}`)
-                for (let index = 0; index < tableSize; index++) {
-                    let auxMap = auxTable.getMapList(index);
-                    this.expresion.map1 = auxMap;
-                    var value = this.expresion.interpretar(entorno,lista_errores);
-                    console.log(`Value: ${value.valor}`)
-                    if (value.valor) {
-                        console.log('Se agrega en la posicion: '+index)
-                        var keyList = auxTable.getKeyList();
-                        var filaas = [];
-                        for (const [nombreColumna, valor] of auxMap) {
-                            console.log('==========================')
-                            console.log('==========================')
-                            if (valor !=null) {
-                                
-                                console.log(`Columna "${nombreColumna}" valor: ${valor} :`);
-                            } else {
-                                console.log(`Columna "${nombreColumna}" valor:  `);
-                                
-                            }
-                            filaas.push(valor);
-
-                            console.log('==========================')
-                        }   
-                        resultado.push(filaas);                     
-                        
-                    } else {
-                        
-                    }
-                    
-                }  
+                this.from !=null ? this.from[0] != null ? this.from[0][0]:null:null;
                
             }
         } else if(this.instruccion.length > 0){ 
