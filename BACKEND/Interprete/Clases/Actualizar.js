@@ -12,7 +12,7 @@ class Actualizar extends Instruction{
     }
     interpretar(entorno,lista_errores){ 
         console.log('interpretar Actualizacion de variable: '+this.id);
-        
+            
             let valor2 = this.valor.interpretar(entorno,lista_errores);                        
 
         //Verificar si la variable existe en el entorno
@@ -34,9 +34,9 @@ class Actualizar extends Instruction{
             padre: -1, 
             cadena: ''
         }
+        let labels = '';
         let instPadre = obtenerContador(); 
         labels += `${instPadre} [label="instruccion" ]\n`        
-        let labels = '';
         let uniones = '';
         let Rexp = this.valor.generarAst();
         labels += Rexp.cadena;

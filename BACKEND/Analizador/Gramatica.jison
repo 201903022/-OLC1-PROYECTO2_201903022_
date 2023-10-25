@@ -183,6 +183,7 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 	const TypeSelect = require('../Interprete/Enums/TipoSelec.js');1
 	var tipoSelectVar = '';
 	const Sucio1 = require('../Interprete/Sucio/Sucio.js');
+	const DropTable = require('../Interprete/Tables/DropT.js');
 
 %}
 
@@ -243,14 +244,14 @@ instruccion
 	| createTable PCOMA {console.log('Instruccion createTable');}
 	| insertG PCOMA {console.log('Instruccion insertG');}
 	| alterTable PCOMA {console.log('Instruccion alterTable');}
-	//| select PCOMA {console.log('Instruccion select');}
-	|select2 PCOMA {console.log('Instruccione select 2')}
+	| select2 PCOMA {console.log('Instruccione select 2')}
 	| updateG PCOMA {console.log('Instruccion select');}
 	| deletG PCOMA {console.log('Instruccion select');}
 	| beginEnd PCOMA{console.log('Instruccion beginEnd');}
 	| for PCOMA {console.log('Instruccion for');}
 	| while PCOMA {console.log('Instruccion while');}
 	| case PCOMA {console.log('Instruccion case');}
+	| dropTable PCOMA {console.log('Instruccion dropTable');}
 	| error PCOMA	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
@@ -451,12 +452,12 @@ print
 ;
 
 ifG 
-	: R_IF expresion R_THEN  instrucciones R_END R_IF
+	: R_IF expresion R_THEN  instruccionesBegin R_END R_IF
 	{
 		console.log(`If: ${$2} valor: ${$5}`);
 		$$ = new IfC($2,$4,this._$.first_line, this._$.first_column);
 	}
-	| R_IF expresion R_THEN  instrucciones R_ELSE instrucciones R_END R_IF{
+	| R_IF expresion R_THEN  instruccionesBegin R_ELSE instruccionesBegin R_END R_IF{
 
 		console.log('IFELSE');
 		$$ = new IfElse($2,$4,$6,this._$.first_line, this._$.first_column);
@@ -670,10 +671,6 @@ expSelect
 ;
 //select exp as "resultado"  ; 
 
-
-
-
-
 where
 	: R_WHERE conditions{ 
 	console.log('where');
@@ -686,7 +683,6 @@ where
 
 ;
 	
-
 
 conditions 
 	:conditions AND conditions {
@@ -769,8 +765,15 @@ deletG
 	}
 ;
 
+
+dropTable	
+	: R_DROP R_TABLE ID{ 
+		console.log('DropTable');
+		$$ = new DropTable($3,this._$.first_line, this._$.first_column);
+	}
+;
 for
-	: R_FOR VARIABLE R_IN expresion DOT DOT expresion R_BEGIN instrucciones R_END { 
+	: R_FOR VARIABLE R_IN expresion DOT DOT expresion R_BEGIN instruccionesBegin R_END { 
 		console.log('For');
 		$$ = new ForI($2,$4,$7,$9,this._$.first_line, this._$.first_column);
 	}
@@ -784,7 +787,7 @@ idVar
 	}
 	;
 while 
-     : R_WHILE expresion R_BEGIN instrucciones R_END { 
+     : R_WHILE expresion R_BEGIN instruccionesBegin R_END { 
 		console.log('While');
 		$$ = new WhileT($2,$4,this._$.first_line, this._$.first_column);
 	}

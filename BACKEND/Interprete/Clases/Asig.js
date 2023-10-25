@@ -14,7 +14,7 @@ class Asig extends Instruction{
 
     interpretar(entorno,lista_errores){ 
         //Verificar que el tipo de variable corresponda con el valor asignado90 
-        console.log('Interpretar Asignacion')
+        console.log('Interpretar Asignacion de ' + this.id)
         if (this.valor != null) {
             console.log('Tiene Default')
             if (this.valor.tipo == this.tipo) {

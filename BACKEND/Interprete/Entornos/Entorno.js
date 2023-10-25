@@ -25,6 +25,7 @@ class Entorno{
     }
 
     actualizarVariable(id,valor){
+        this.showVariables();
         console.log('--------------------------------------------------------')
         console.log(`Actualizandod variable: ${id} en entorno: ${this.actual}`)
         for(let e = this; e != null; e = e.anterior){
@@ -57,6 +58,7 @@ class Entorno{
 
     }
     getVariable(id){
+        this.showVariables();
         for(let e = this; e != null; e = e.anterior){
             if(e.variables[id] != null){
                 return e.variables[id];

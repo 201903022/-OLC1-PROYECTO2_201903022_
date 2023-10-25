@@ -239,6 +239,171 @@ class Sucio extends Instruction{
 
 
     }
+
+    generarAst(){ 
+
+        let node = { 
+            padre: -1, 
+            cadena: ''
+        };
+
+        let instPadre = obtenerContador();
+        let labels = '';
+        let uniones = '';
+        let Rselect = obtenerContador();
+        labels += `${instPadre} [label="instruccion" ]\n`
+        labels += `${Rselect} [label="select" ]\n`
+        let selectG = obtenerContador(); 
+        labels += `${selectG} [label="select: " ]\n`; 
+        let rListado = obtenerContador();
+        labels += `${rListado} [label="listado: " ]\n`;
+        let rInstruccion = obtenerContador(); 
+        labels += `${rInstruccion} [label="instruccionSelect: " ]\n`;
+
+        uniones += `${selectG} -- ${Rselect}\n`;
+        uniones += `${selectG} -- ${rInstruccion}\n`;
+        uniones += `${rInstruccion} -- ${rListado}\n`;
+        switch (this.tipoSelect) {
+            case TipoSelect1.ALL:
+                    let rAsteriso = obtenerContador();
+                    labels += `${rAsteriso} [label="*"]\n`;
+                    uniones += `${rListado} -- ${rAsteriso}\n`
+                    if (this.from != null) {
+                        let rFrom = obtenerContador(); 
+                        labels += `${rFrom} [label="from: " ]\n`;
+                        let rFrom2 = obtenerContador(); 
+
+                        let rTable = obtenerContador();
+                        labels += `${rTable} [label="${this.from[0]}"]\n`;
+                        labels += `${rFrom2} [label="from" ]\n`;
+                        uniones += `${rFrom} -- ${rFrom2}\n`;
+                        uniones += `${rFrom} -- ${rTable}\n`;
+
+                        if (this.from[1]!=null) {
+                            let rWher = obtenerContador();
+                            labels += `${rWher} [label="where: " ]\n`;
+                            let rWherg = obtenerContador(); 
+                            labels += `${rWherg} [label="whereG"]\n`;
+                            let rCondicion = obtenerContador();
+                            let exp = this.from[1].generarAst(); 
+                            labels += exp.cadena;
+                            labels += `${rCondicion} [label="condicion:"]\n`;
+                            
+                            uniones += `${rFrom} -- ${rWherg}\n`;
+                            uniones += `${rWherg} -- ${rWher}\n`;
+                            uniones += `${rWherg} -- ${rCondicion}\n`;
+                            uniones += `${rCondicion} -- ${exp.padre}\n`;
+                            
+                            
+                        } else {
+                            
+                        }
+                        uniones += `${selectG} -- ${rFrom}\n`;
+
+                    } else {
+                        
+                    }
+                    
+                break;  
+        
+            case TipoSelect1.LISTCOLUMNS: 
+                let rListado2 = obtenerContador();
+                labels += `${rListado2} [label="listColumnsSelec:" ]\n`;
+                uniones += `${rListado} -- ${rListado2}\n`;
+                this.listado.forEach(element => {
+                    console.log(labels + uniones)
+                    let Id = obtenerContador(); 
+                    labels += `${Id} [label="${element[0]}"]\n`;
+                    uniones += `${rListado2} -- ${Id} \n`
+                    console.log(labels + uniones)
+                    if (element[1] != null) {
+                        let rAs = obtenerContador();
+                        labels += `${rAs} [label="as: " ]\n`;
+                        let rAs2 = obtenerContador();
+                        labels += `${rAs2} [label="as "]\n`;
+                        console.log('antes del as')
+                        let exp = element[1].generarAst();
+                        labels += exp.cadena;
+                        uniones += `${rAs} -- ${rAs2}\n`;
+                        uniones += `${rAs} -- ${exp.padre}\n`;
+                        uniones += `${Id} -- ${rAs}\n`;
+                        console.log(labels + uniones)
+                    } 
+                });
+                if (this.from != null) {
+                    let rFrom = obtenerContador(); 
+                    labels += `${rFrom} [label="from: " ]\n`;
+                    let rFrom2 = obtenerContador(); 
+
+                    let rTable = obtenerContador();
+                    labels += `${rTable} [label="${this.from[0]}"]\n`;
+                    labels += `${rFrom2} [label="from" ]\n`;
+                    uniones += `${rFrom} -- ${rFrom2}\n`;
+                    uniones += `${rFrom} -- ${rTable}\n`;
+
+                    if (this.from[1]!=null) {
+                        let rWher = obtenerContador();
+                        labels += `${rWher} [label="where: " ]\n`;
+                        let rWherg = obtenerContador(); 
+                        labels += `${rWherg} [label="whereG"]\n`;
+                        let rCondicion = obtenerContador();
+                        let exp = this.from[1].generarAst(); 
+                        labels += exp.cadena;
+                        labels += `${rCondicion} [label="condicion:"]\n`;
+                        uniones += `${rFrom} -- ${rWherg}\n`;
+                        uniones += `${rWherg} -- ${rWher}\n`;
+                        uniones += `${rWherg} -- ${rCondicion}\n`;
+                        uniones += `${rCondicion} -- ${exp.padre}\n`;
+                        }else{
+                                
+                            }
+                    uniones += `${selectG} -- ${rFrom}\n`;
+                }
+                console.log('salio de acaaaaaa')
+                break;
+            case TipoSelect1.LISTEXP: 
+                console.log('entro Listexp')
+                let listExp = obtenerContador(); 
+                labels += `${listExp} [label="listExp: " ]\n`;
+                uniones += `${rListado} -- ${listExp}\n`
+                let array = this.listado;
+                array.forEach(element => {
+                    console.log('Element ',element[0])
+                    let exp = element[0].generarAst();
+                    let RExpSelect = obtenerContador(); 
+                    labels += `${RExpSelect} [label="expSelect:" ]\n`;
+                    labels += exp.cadena;
+                    uniones += `${RExpSelect} -- ${exp.padre}\n`;
+                    uniones += `${listExp} -- ${RExpSelect}\n`;
+                    if (element[1] != null) {
+                        let rAs = obtenerContador();
+                        labels += `${rAs} [label="as: " ]\n`;
+                        let rAs2 = obtenerContador();
+                        labels += `${rAs2} [label="as "]\n`;
+                        let exp = element[1].generarAst();
+                        labels += exp.cadena;
+                        uniones += `${rAs} -- ${rAs2}\n`;
+                        uniones += `${rAs} -- ${exp.padre}\n`;
+                        uniones += `${RExpSelect} -- ${rAs}\n`;
+                    } else {
+                        
+                    }
+                    
+                });
+                break;
+            default:
+                break;
+        }
+        console.log('llego hasta el final')
+        console.log(labels + uniones)
+        uniones += `${instPadre} -- ${selectG}\n`
+        node.cadena = labels + uniones;
+        node.padre = instPadre;
+        return node;
+        
+
+
+    }
 }
 
 module.exports = Sucio;
