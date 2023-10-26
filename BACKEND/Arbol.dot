@@ -1,333 +1,389 @@
 graph AST{ 
  ordering = "out" 
-164 [label="INICIO"]
-165 [label="listInstrucciones"]
-164 -- 165
-167 [label="CREATE_TABLE"]
-168 [label="create"]
-169 [label="table"]
-170 [label="id" ]
-171 [label="fizzbuzz" ]
-172 [label="(" ]
-173 [label="lisatColumnas" ]
-174 [label=")" ]
-175 [label="columnasCreate"]
-176 [label="ID"]
-178 [label="indice"]
-179 [label="INT"]
-181 [label="listaColumnas"]
-180 [label=","]
-177 [label="TipoDato"]
-175 -- 176 
-175 -- 177 
-176 -- 178 
-177 -- 179 
-173 -- 175 
-173 -- 180 
-182 [label="columnasCreate"]
-183 [label="ID"]
-185 [label="numero"]
-186 [label="VARCHAR"]
-188 [label="listaColumnas"]
-187 [label=","]
-184 [label="TipoDato"]
-182 -- 183 
-182 -- 184 
-183 -- 185 
-184 -- 186 
-173 -- 182 
-173 -- 187 
-167 -- 168 
-166 [label="instruccion"]
-167 -- 169 
-167 -- 170 
-167 -- 172 
-167 -- 173 
-167 -- 174 
-170 -- 171 
-166 -- 167 
-165 -- 166
-190 [label="instruccion"]
-191[label="beginEnd"];
-192 [label="Begin"];
-193 [label="End"];
-194 [label="instruccionBegin"];
-195 [label="instruccion" ]
-196 [label="for" ]
-197 [label="for" ]
-198 [label="ID: undefined" ]
-199 [label="in" ]
-200 [label = "0"]
-201 [label = "expresion" ]
- 201 -- 200
-undefined202 [label="Begin" ]
-203 [label="instrucciones" ]
-205 [label="instruccion"]
-206 [label="asignaciones1"]
-207 [label="AsignacionDefault"]
-208 [label="DeclarAsig"]
-209 [label="Variable"]
-210 [label="TipoDato"]
-211 [label="VARCHAR"]
-212 [label="Default"]
-213 [label = ""]
-214 [label = "expresion" ]
- 214 -- 213
-210 -- 211
-207 -- 208
-207 -- 209
-207 -- 210
-207 -- 212
-207 -- 214
-206 -- 207
-205 -- 206
-215 [label="expresion" ]
-216 [label="@index" ]
-215 -- 216
-219 [label = "3"]
-220 [label = "expresion" ]
- 220 -- 219
-217 [label = "undefined" ]
- 218 [label = "expresion"]
-218 -- 215
-218 -- 217
-218 -- 220
-221 [label = "0"]
-222 [label = "expresion" ]
- 222 -- 221
-223 [label="expresionLogica" ]
- 224 [label="="]
-223 -- 218
-223 -- 224
-223 -- 222
-225 [label="ifG"]
-227 [label="if"]
-228 [label="then"]
-229 [label="instruccion" ]
-230 [label="instrucciones"]
-231 [label="instruccion" ]
-232 [label="expresion" ]
-233 [label="@result" ]
-232 -- 233
-236 [label = "fizz"]
-237 [label = "expresion" ]
- 237 -- 236
-234 [label = "+" ]
- 235 [label = "expresion"]
-235 -- 232
-235 -- 234
-235 -- 237
-238 [label="actualizarV" ]
-239 [label="set" ]
-240 [label="@result" ]
-241 [label="=" ]
-238 -- 239
-238 -- 240
-238 -- 241
-238 -- 235
-231 -- 238
-242 [label="end"]
-243 [label="if"]
-226 [label="Condicion"]
-230 -- 231
-225 -- 226
-225 -- 227
-225 -- 223
-225 -- 228
-225 -- 230
-225 -- 242
-225 -- 243
-229 -- 225
-244 [label="expresion" ]
-245 [label="@index" ]
-244 -- 245
-248 [label = "5"]
-249 [label = "expresion" ]
- 249 -- 248
-246 [label = "undefined" ]
- 247 [label = "expresion"]
-247 -- 244
-247 -- 246
-247 -- 249
-250 [label = "0"]
-251 [label = "expresion" ]
- 251 -- 250
-252 [label="expresionLogica" ]
- 253 [label="="]
-252 -- 247
-252 -- 253
-252 -- 251
-254 [label="ifG"]
-256 [label="if"]
-257 [label="then"]
-258 [label="instruccion" ]
-259 [label="instrucciones"]
-260 [label="instruccion" ]
-261 [label="expresion" ]
-262 [label="@result" ]
-261 -- 262
-265 [label = "buzz"]
-266 [label = "expresion" ]
- 266 -- 265
-263 [label = "+" ]
- 264 [label = "expresion"]
-264 -- 261
-264 -- 263
-264 -- 266
-267 [label="actualizarV" ]
-268 [label="set" ]
-269 [label="@result" ]
-270 [label="=" ]
-267 -- 268
-267 -- 269
-267 -- 270
-267 -- 264
-260 -- 267
-271 [label="end"]
-272 [label="if"]
-255 [label="Condicion"]
-259 -- 260
-254 -- 255
-254 -- 256
-254 -- 252
-254 -- 257
-254 -- 259
-254 -- 271
-254 -- 272
-258 -- 254
-273 [label="expresion" ]
-274 [label="@result" ]
-273 -- 274
-275 [label = ""]
-276 [label = "expresion" ]
- 276 -- 275
-277 [label="expresionLogica" ]
- 278 [label="="]
-277 -- 273
-277 -- 278
-277 -- 276
-279 [label="ifG"]
-281 [label="if"]
-282 [label="then"]
-283 [label="instruccion" ]
-284 [label="instrucciones"]
-285 [label="instruccion" ]
-286 [label="expresion"]
-287 [label="casteo"]
-288 [label="cast"]
-289 [label="as"]
-290 [label="expresion" ]
-291 [label="@index" ]
-290 -- 291
-292 [label="TipoDato"]
-293 [label="VARCHAR"]
-292 -- 293
-287 -- 288
-287 -- 290
-287 -- 289
-287 -- 292
-286 -- 287
-294 [label="actualizarV" ]
-295 [label="set" ]
-296 [label="@result" ]
-297 [label="=" ]
-294 -- 295
-294 -- 296
-294 -- 297
-294 -- 286
-285 -- 294
-298 [label="end"]
-299 [label="if"]
-280 [label="Condicion"]
-284 -- 285
-279 -- 280
-279 -- 281
-279 -- 277
-279 -- 282
-279 -- 284
-279 -- 298
-279 -- 299
-283 -- 279
-300 [label="instruccion" ]
-301 [label="fizzbuzz"]
-302 [label="insert"]
-303 [label="into"]
-304 [label="ID"]
-305 [label="("]
-306 [label="listColumnas"]
-307 [label=")"]
-308 [label="indice"]
-309 [label="columnId"]
-310 [label=","]
-311 [label="numero"]
-312 [label="columnId"]
-315 [label="expresion" ]
-316 [label="@index" ]
-315 -- 316
-317 [label=","]
-318 [label="expresion" ]
-319 [label="@result" ]
-318 -- 319
-313 [label="values"]
-314 [label="("]
-320 [label=")"]
-321 [label="INSERT"]
-306 -- 309
-309 -- 308
-306 -- 310
-306 -- 312
-312 -- 311
-313 -- 315
-313 -- 317
-313 -- 318
-304 -- 301
-321 -- 302
-321 -- 303
-321 -- 304
-321 -- 305
-321 -- 306
-321 -- 307
-321 -- 314
-321 -- 313
-321 -- 320
-300 -- 321
-204 [label="End" ]
-203 -- 205
-203 -- 229
-203 -- 258
-203 -- 283
-203 -- 300
-196 -- 197
-196 -- 198
-196 -- 199
-196 -- 201
-196 -- undefined
-196 -- 202
-196 -- 203
-196 -- 204
-195 -- 196
-191 -- 192;
-191 -- 194;
-191 -- 193;
-194 -- 195;
-190 -- 191;
-165 -- 190
-323 [label="instruccion" ]
-324 [label="select" ]
-325 [label="select: " ]
-326 [label="listado: " ]
-327 [label="instruccionSelect: " ]
-328 [label="*"]
-329 [label="from: " ]
-331 [label="fizzbuzz"]
-330 [label="from" ]
-325 -- 324
-325 -- 327
-327 -- 326
-326 -- 328
-329 -- 330
-329 -- 331
-325 -- 329
-323 -- 325
-165 -- 323
+397 [label="INICIO"]
+398 [label="listInstrucciones"]
+397 -- 398
+400 [label="CREATE_TABLE"]
+401 [label="create"]
+402 [label="table"]
+403 [label="id" ]
+404 [label="personas" ]
+405 [label="(" ]
+406 [label="lisatColumnas" ]
+407 [label=")" ]
+408 [label="columnasCreate"]
+409 [label="ID"]
+411 [label="nombre"]
+412 [label="VARCHAR"]
+414 [label="listaColumnas"]
+413 [label=","]
+410 [label="TipoDato"]
+408 -- 409 
+408 -- 410 
+409 -- 411 
+410 -- 412 
+406 -- 408 
+406 -- 413 
+415 [label="columnasCreate"]
+416 [label="ID"]
+418 [label="sexo"]
+419 [label="VARCHAR"]
+421 [label="listaColumnas"]
+420 [label=","]
+417 [label="TipoDato"]
+415 -- 416 
+415 -- 417 
+416 -- 418 
+417 -- 419 
+406 -- 415 
+406 -- 420 
+422 [label="columnasCreate"]
+423 [label="ID"]
+425 [label="edad"]
+426 [label="INT"]
+428 [label="listaColumnas"]
+427 [label=","]
+424 [label="TipoDato"]
+422 -- 423 
+422 -- 424 
+423 -- 425 
+424 -- 426 
+406 -- 422 
+406 -- 427 
+429 [label="columnasCreate"]
+430 [label="ID"]
+432 [label="estatura"]
+433 [label="DOUBLE"]
+435 [label="listaColumnas"]
+434 [label=","]
+431 [label="TipoDato"]
+429 -- 430 
+429 -- 431 
+430 -- 432 
+431 -- 433 
+406 -- 429 
+406 -- 434 
+436 [label="columnasCreate"]
+437 [label="ID"]
+439 [label="nacimiento"]
+440 [label="DATE"]
+442 [label="listaColumnas"]
+441 [label=","]
+438 [label="TipoDato"]
+436 -- 437 
+436 -- 438 
+437 -- 439 
+438 -- 440 
+406 -- 436 
+406 -- 441 
+443 [label="columnasCreate"]
+444 [label="ID"]
+446 [label="check"]
+447 [label="BOOLEAN"]
+449 [label="listaColumnas"]
+448 [label=","]
+445 [label="TipoDato"]
+443 -- 444 
+443 -- 445 
+444 -- 446 
+445 -- 447 
+406 -- 443 
+406 -- 448 
+400 -- 401 
+399 [label="instruccion"]
+400 -- 402 
+400 -- 403 
+400 -- 405 
+400 -- 406 
+400 -- 407 
+403 -- 404 
+399 -- 400 
+398 -- 399
+451 [label="instruccion"]
+452[label="beginEnd"];
+453 [label="Begin"];
+454 [label="End"];
+455 [label="instruccionBegin"];
+456 [label="instruccion"]
+457 [label="asignaciones1"]
+458 [label="AsignacionDefault"]
+459 [label="DeclarAsig"]
+460 [label="Variable"]
+461 [label="TipoDato"]
+462 [label="VARCHAR"]
+463 [label="Default"]
+464 [label = "a "]
+465 [label = "expresion" ]
+ 465 -- 464
+461 -- 462
+458 -- 459
+458 -- 460
+458 -- 461
+458 -- 463
+458 -- 465
+457 -- 458
+456 -- 457
+466 [label="instruccion"]
+467 [label="asignaciones1"]
+468 [label="AsignacionDefault"]
+469 [label="DeclarAsig"]
+470 [label="Variable"]
+471 [label="TipoDato"]
+472 [label="VARCHAR"]
+473 [label="Default"]
+474 [label = "a "]
+475 [label = "expresion" ]
+ 475 -- 474
+471 -- 472
+468 -- 469
+468 -- 470
+468 -- 471
+468 -- 473
+468 -- 475
+467 -- 468
+466 -- 467
+476 [label="instruccion" ]
+477 [label="for" ]
+478 [label="for" ]
+479 [label="ID: undefined" ]
+480 [label="in" ]
+481 [label = "0"]
+482 [label = "expresion" ]
+ 482 -- 481
+undefined483 [label="Begin" ]
+484 [label="instrucciones" ]
+486 [label="instruccion" ]
+487 [label="expresion" ]
+488 [label="@index" ]
+487 -- 488
+491 [label = "2"]
+492 [label = "expresion" ]
+ 492 -- 491
+489 [label = "undefined" ]
+ 490 [label = "expresion"]
+490 -- 487
+490 -- 489
+490 -- 492
+493 [label = "0"]
+494 [label = "expresion" ]
+ 494 -- 493
+495 [label="expresionLogica" ]
+ 496 [label="="]
+495 -- 490
+495 -- 496
+495 -- 494
+497 [label="ifG"]
+499 [label="if"]
+500 [label="then"]
+501 [label="instrucciones"]
+503 [label = "HOLA"]
+504 [label = "expresion" ]
+ 504 -- 503
+502[label="instruccion"]
+506[label="PRINT"]
+505[label="print"] 
+506 -- 505
+506 -- 504
+502 -- 506
+507 [label="instruccion" ]
+508 [label = "M"]
+509 [label = "expresion" ]
+ 509 -- 508
+510 [label="actualizarV" ]
+511 [label="set" ]
+512 [label="@sexo" ]
+513 [label="=" ]
+510 -- 511
+510 -- 512
+510 -- 513
+510 -- 509
+507 -- 510
+515 [label="expresion" ]
+516 [label="@sexo" ]
+515 -- 516
+514[label="instruccion"]
+518[label="PRINT"]
+517[label="print"] 
+518 -- 517
+518 -- 515
+514 -- 518
+519 [label="else"]
+520 [label="instrucciones"]
+521 [label="instruccion" ]
+522 [label = "F"]
+523 [label = "expresion" ]
+ 523 -- 522
+524 [label="actualizarV" ]
+525 [label="set" ]
+526 [label="@sexo" ]
+527 [label="=" ]
+524 -- 525
+524 -- 526
+524 -- 527
+524 -- 523
+521 -- 524
+528 [label="end"]
+529 [label="if"]
+498 [label="Condicion"]
+501 -- 502
+501 -- 507
+501 -- 514
+520 -- 521
+497 -- 498
+497 -- 499
+497 -- 495
+497 -- 500
+497 -- 501
+497 -- 528
+497 -- 529
+486 -- 497
+530 [label="instruccion" ]
+531 [label="personas"]
+532 [label="insert"]
+533 [label="into"]
+534 [label="ID"]
+535 [label="("]
+536 [label="listColumnas"]
+537 [label=")"]
+538 [label="nombre"]
+539 [label="columnId"]
+540 [label=","]
+541 [label="edad"]
+542 [label="columnId"]
+543 [label=","]
+544 [label="estatura"]
+545 [label="columnId"]
+546 [label=","]
+547 [label="sexo"]
+548 [label="columnId"]
+549 [label=","]
+550 [label="nacimiento"]
+551 [label="columnId"]
+552 [label=","]
+553 [label="check"]
+554 [label="columnId"]
+557 [label = "persona"]
+558 [label = "expresion" ]
+ 558 -- 557
+561 [label="expresion"]
+562 [label="casteo"]
+563 [label="cast"]
+564 [label="as"]
+565 [label="expresion" ]
+566 [label="@index" ]
+565 -- 566
+567 [label="TipoDato"]
+568 [label="VARCHAR"]
+567 -- 568
+562 -- 563
+562 -- 565
+562 -- 564
+562 -- 567
+561 -- 562
+559 [label = "+" ]
+ 560 [label = "expresion"]
+560 -- 558
+560 -- 559
+560 -- 561
+569 [label=","]
+570 [label = "10"]
+571 [label = "expresion" ]
+ 571 -- 570
+572 [label=","]
+573 [label = "15.0"]
+574 [label = "expresion" ]
+ 574 -- 573
+575 [label=","]
+576 [label="expresion" ]
+577 [label="@sexo" ]
+576 -- 577
+578 [label=","]
+579 [label = "2001-03-02"]
+580 [label = "expresion" ]
+ 580 -- 579
+581 [label=","]
+582 [label = "true"]
+583 [label = "expresion" ]
+ 583 -- 582
+555 [label="values"]
+556 [label="("]
+584 [label=")"]
+585 [label="INSERT"]
+536 -- 539
+539 -- 538
+536 -- 540
+536 -- 542
+542 -- 541
+536 -- 543
+536 -- 545
+545 -- 544
+536 -- 546
+536 -- 548
+548 -- 547
+536 -- 549
+536 -- 551
+551 -- 550
+536 -- 552
+536 -- 554
+554 -- 553
+555 -- 560
+555 -- 569
+555 -- 571
+555 -- 572
+555 -- 574
+555 -- 575
+555 -- 576
+555 -- 578
+555 -- 580
+555 -- 581
+555 -- 583
+534 -- 531
+585 -- 532
+585 -- 533
+585 -- 534
+585 -- 535
+585 -- 536
+585 -- 537
+585 -- 556
+585 -- 555
+585 -- 584
+530 -- 585
+485 [label="End" ]
+484 -- 486
+484 -- 530
+477 -- 478
+477 -- 479
+477 -- 480
+477 -- 482
+477 -- undefined
+477 -- 483
+477 -- 484
+477 -- 485
+476 -- 477
+452 -- 453;
+452 -- 455;
+452 -- 454;
+455 -- 456;
+455 -- 466;
+455 -- 476;
+451 -- 452;
+398 -- 451
+587 [label="instruccion" ]
+588 [label="select" ]
+589 [label="select: " ]
+590 [label="listado: " ]
+591 [label="instruccionSelect: " ]
+592 [label="*"]
+593 [label="from: " ]
+595 [label="personas"]
+594 [label="from" ]
+589 -- 588
+589 -- 591
+591 -- 590
+590 -- 592
+593 -- 594
+593 -- 595
+589 -- 593
+587 -- 589
+398 -- 587
 }

@@ -93,7 +93,7 @@ class CaseT extends Instruction{
             padre: -1, 
             cadena: ''
         }
-
+        
         let labels = '';
         let uniones = '';
         let salida = ''; 
@@ -111,6 +111,28 @@ class CaseT extends Instruction{
         let Rexpresiones = obtenerContador();
         labels += `${Rexpresiones} [label="expresiones" ]\n`
         let Relses = obtenerContador();
+        labels += `${Relses} [label="else" ]\n`
+        let elseExp = this.elses.generarAst(); 
+        labels += elseExp.cadena;
+        let REnd = obtenerContador(); 
+        labels += `${REnd} [label="end" ]\n`
+        let Rasg= obtenerContador(); 
+        labels += `${Rasg} [label="as" ]\n`
+        uniones += `${instPadre} -- ${casePadre}\n`;
+        uniones += `${casePadre} -- ${Rcase}\n`;
+        uniones += `${casePadre} -- ${Rexp1.padre}\n`;
+        uniones += `${casePadre} -- ${rlist}\n`;
+        uniones += `${casePadre} -- ${elseExp.padre}\n`;
+        uniones += `${casePadre} -- ${REnd}\n`;
+        uniones += `${casePadre} -- ${Rasg}\n`;
+        uniones += `${casePadre} -- ${REnd}\n`;
+        
+        uniones += `${casePadre} -- ${Rasg}\n`;
+
+        salida = labels + uniones;
+        node.cadena = salida;
+        node.padre = instPadre;
+        return node;
 
     }
 }

@@ -31,8 +31,14 @@ class ForI extends Instruction {
             //entorno1.actualizarId(this.id.id ,index);
             let exp = new Dato(index,TipoDato.INT,this.fila,this.columna);
             entorno1.actualizarVariable(this.id, exp);
+
             this.instrucciones.forEach(element => {
-                element.interpretar(entorno1,lista_errores);
+                try {
+                    element = element.interpretar(entorno1,lista_errores);
+                } catch (error) {
+                    console.log('error en for '+ error)
+                }
+                
             });
             entorno1.showVariables();
         }

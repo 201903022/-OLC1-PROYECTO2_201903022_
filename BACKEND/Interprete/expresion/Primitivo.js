@@ -36,7 +36,7 @@ class Primitivo extends Instruction{
                 console.log(`Fecha formateada: ${fecha}`)
                 return (new Dato(fecha, TipoDato.DATE, this.fila, this.columna));
             case TipoDato.BOOLEAN:
-                if (this.valor == 'true') {
+                if (this.valor) {
                     return (new Dato(true, TipoDato.BOOLEAN, this.fila, this.columna));
                 } else {
                     return (new Dato(false, TipoDato.BOOLEAN, this.fila, this.columna));
@@ -45,6 +45,7 @@ class Primitivo extends Instruction{
                 return (new Dato(this.valor, TipoDato.ID, this.fila, this.columna));
             case TipoDato.NULL: 
                 return (new Dato(null, TipoDato.NULL, this.fila, this.columna));
+            
             default:
                 break;
         }

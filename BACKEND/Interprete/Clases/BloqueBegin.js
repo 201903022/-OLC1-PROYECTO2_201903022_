@@ -16,11 +16,26 @@ class BloqueBegin extends Instruction {
 
     interpretar(entorno,lista_errores){ 
         let entorno1 = new Entorno("bloqueBeginEnd",entorno); 
-        console.log('Interpretar Bloque Begin')
-        for (let index = 0; index < this.instrucciones.length; index++) {
-            const element = this.instrucciones[index];
-            element.interpretar(entorno1,lista_errores);
+        console.log('Interpretar Bloque Begin');
+        try {
+            for (let index = 0; index < this.instrucciones.length; index++) {
+                try {
+                    const element = this.instrucciones[index];
+                    console.log('Element ',element)
+                    element.interpretar(entorno1,lista_errores);      
+                } catch (error) {
+                    console.log(
+                        
+                        'Error al interpretar el bloque begin', error
+                    )
+                    
+                }
+
+            }
+        } catch (error) {
+            console.log('Error en interpretar entorno beginEnd '+ error)
         }
+
     }
 
     generarAst() { 

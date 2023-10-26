@@ -33,7 +33,7 @@ class Sucio extends Instruction{
         let condicion = this.from !=null ? this.from[1] :null;
         let auxTable = null;
         let tableSize = 0;  
-       
+       try {
         switch (this.tipoSelect) {
             case TipoSelect1.ALL: 
                 console.log('ALL from switch');
@@ -234,6 +234,10 @@ class Sucio extends Instruction{
             default:
                 break;
         }
+       } catch (error) {
+        console.log('Error en interpretar el select: ' + error);
+       }
+
         
 
 

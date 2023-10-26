@@ -27,9 +27,9 @@ class IF extends Instruction{
         const IfEntorno = new Entorno(nameEntorno,entorno);
         if (Logicas.includes(this.condicion.tipo)) {
             console.log('If si posee una instruccion logica');
-            this.condicion = this.condicion.interpretar(IfEntorno,lista_errores); 
-            console.log(`Condicion: ${this.condicion.valor}`);
-                if (this.condicion.valor) {
+            let condicion2 = this.condicion.interpretar(IfEntorno,lista_errores); 
+            console.log(`Condicion: ${condicion2.valor}`);
+                if (condicion2.valor) {
                     console.log('Condicion verdadera');
                     for (let index = 0; index < this.instrucciones.length; index++) {
                         const element = this.instrucciones[index];

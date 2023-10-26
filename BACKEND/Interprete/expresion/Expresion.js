@@ -203,9 +203,10 @@ class Expresion extends Instruction {
                         console.log('Error: El tipo de dato: '+OpIzquierdo.tipo+ ' no se puede multiplicar con Tipo: '+OpDerecho.tipo);
                         return new Dato('null', Tipo.NULO, this.linea, this.columna);                        
                     }
-                case TipoOp.DIVSION:
+                case TipoOp.DIVISION:
                     if (OpLeft.tipo == TipoDato.INT && OpRight.tipo == TipoDato.INT)
                     {
+                        console.log('Divisiooooooooooooooooooooooooooooon de enteros')
                         console.log('OpLeft.tipo == TipoDato.INT && OpRight.tipo == TipoDato.INT')
                         var resultado = OpLeft.valor / OpRight.valor;
                         console.log('Resultado: '+resultado);

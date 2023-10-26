@@ -3,7 +3,7 @@ const TipoOp = {
     'RESTA' : '-',
     'MULTI' : '*',
     'POTENCIA' : '^',
-    'DIVSION' : '/',
+    'DIVISION' : '/',
     'MAYORK' : '>',
     'MENORK' : '<',
     'MAYORIK' : '<=',

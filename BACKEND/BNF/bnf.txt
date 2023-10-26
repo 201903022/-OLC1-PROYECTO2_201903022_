@@ -1,0 +1,196 @@
+<inicio> ::= <instrucciones> 
+;
+<instrucciones> ::= <instruccion> <instrucciones> 
+                  | <instruccion>
+
+<instruccion> ::= <if> ";"
+                | <print>";"
+                | <createTable>";"
+                | <insertG>";"
+                | <alterTable>";"
+                | <select2>";"
+                | <updateG>";"
+                | <beginEnd>";"
+                | <for>";"
+                | <while>";"
+                | <case>";"
+                | <dropTable>";
+;
+<beginEnd> ::= <instruccionesBegin> < instruccionBegin> 
+            |<instruccionBegin>
+
+;
+<instruccionesBegin> ::= <asignaciones1> ";"
+                    |<actualizarV> ";" 
+                    |<instruccion> ";"
+;
+<expresion> ::= "-" <expresion> 
+            |<expresion> "and" <expresion>
+            |<expresion> "=" <expresion>
+            |<expresion> "or" <expresion>
+            |<expresion> ">" <expresion>
+            |<expresion> "<" <expresion>
+            |<expresion> ">=" <expresion>
+            |<expresion> "<=" <expresion>
+            |<expresion> "+" <expresion>
+            |<expresion> "-" <expresion>
+            |<expresion> "*" <expresion>
+            |<expresion> "/" <expresion>
+            |<expresion> "%" <expresion>
+            |<expresion> "^" <expresion>
+            |"(" <expresion>")"
+            |<int> 
+            |<double>
+            |<varchar>
+            |<variable>
+            |"true" 
+            |"false"
+            |<date>
+            |<casteo> 
+        ;
+<asignaciones1> 
+			::=<asignacionDefault>
+			|"declare" <list_asignaciones>
+;
+
+asignacion1 ::= <variable> <tipoDato>
+;
+asignacionDefault
+			: "declare"  <variable> <tipoDato> "default" <expresion> 
+;
+
+<list_asignaciones> ::= <list_asignaciones> "," <asignacion1> 
+            |<asignacion1>
+;
+
+<tipoDato> ::="int"
+            |"double" 
+            |"varchar"
+            |"boolean"
+            |"date"
+;
+<actualizarV> ::= "set" <variable> "=" <expresion> 
+;
+<print> ::= "print" "(" <expresion> ")"
+;
+
+<if> ::= "if"  <expresion>  "then" <instruccionesBegin> "end" "if"
+    |"if" "(" <expresion> ")" "then" <instruccionesBegin> "else" <instruccionBegin> "end" "if"
+;
+
+<casteo> ::= "cast" "(" <expresion> "as" <tipoDato> ")"
+
+<createTable> ::= "create" "table" <id> "(" <listaColumnas> ")"
+;
+<listaColumnas> ::= <listaColumnas> "," <columnasCreate>
+            |<columnasCreate>
+;
+
+<columnasCreate> ::= <id> <tipoDato> 
+;
+
+<insertG> ::= "insert" "into" <id> "(" <listaColumnas> ")" "values" "(" <valuesInsert> ")"
+;
+
+<valuesInsert> ::= <valuesInsert> "," <expresion> 
+            |<expresion>
+;
+
+<alterTable> ::= "alter" "table" <id> <alterTable2>
+;
+
+<instAlter> ::= "add" <columnasCreate>
+            |"drop" "column" <id>
+            |"rename" "column" <id> "to" <id>
+;
+
+<select2> ::= "select" <listado> <from> 
+;
+
+<listado> ::= <<listExp>> 
+            |<listColumnsSelec>
+            |"*" 
+;
+
+<listExp> ::= <listExp> "," <expresionas> 
+            |<expresionas> 
+;
+<expSelect>
+		:<expresion> <as>
+;
+<listColumnsSelec>::=<listColumnsSelec> "," <columnsSelec>
+		|<columnsSelec>
+;
+columnsSelec::= <id> <as>
+;
+
+<listExp> 
+		::=<listExp> COMA <expSelect>
+		|<expSelect>
+;
+<from>
+	::= "from" ID <where> 
+	| e
+;
+where
+	::= "where" <conditions>
+	|/*e*/ 
+;
+
+<conditions> 
+	::=<conditions> "and" <conditions> }
+	| <conditions> "or" <conditions> 	
+	| "not" <conditions>
+	| <ID> "=" <expresion> 
+	| <ID> ">" <expresion> 
+	| <ID> "<" <expresion>
+	| <ID> "<=" <expresion> 
+	| <ID> >= <expresion>
+;
+<id>
+	: <ID>
+;
+
+<updateG> 
+    ::= "update" <ID> "set" <listUpdate> <where>
+    ;
+<listUpdate> ::= <listUpdate> "," <set> 
+            |<set>
+;
+<set> ::= <id> "=" <expresion>
+;
+
+<deletG> 
+    ::= "delete" "from" <ID> <where>
+    ;
+
+<dropTable> 
+    ::= "drop" "table" <ID>
+    ;
+<for> 
+    ::= "for" <variable> "in" <expresion> ".." <expresion> "begin" <instruccionesBegin> "end"
+
+    ;
+<while> 
+    ::= "while" <expresion> "begin" <instruccionesBegin> "end"
+    ;
+<case> 
+    ::= "case" <expresion> <listInstCase> <else> <expresion>  "end" <as> 
+    ;
+<listInstCase> ::= <listInstCase> <instCase> 
+            |<instCase>
+;
+
+<instCase> ::= "when" <expresion> "then" <expresion>
+;
+
+<as> 
+    ::= "as" <expresion>
+    | e
+;
+
+<double> ::=  ([0-9]+("."[0-9]+));
+<int> ::=  ([0-9]+);
+<varchar> ::= \"([^\\\"]|\\.)*\"
+<dates>::= ([0-9]{4} "-" [0-9]{2} "-"[0-9]{2}  )
+<variable> ::= "@" [a-zA-Z][a-zA-Z0-9]*;

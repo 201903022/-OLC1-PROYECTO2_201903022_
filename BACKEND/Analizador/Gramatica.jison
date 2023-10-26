@@ -34,6 +34,7 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 "double" 		{return 'R_DOUBLE';}
 "varchar" 		{return 'R_VARCHAR';}
 "date" 			{return 'R_DATE';}
+"boolean" 		{return 'R_BOOLEAN';}
 
 "table" 		{return 'R_TABLE';}
 
@@ -50,6 +51,10 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 "add"			{return 'R_ADD';}
 "to"			{return 'R_TO';}
 "delete"		{return 'R_DELETE';}
+
+//TRUE ,FALSE
+"true" 			{return 'R_TRUE';}
+"false" 		{return 'R_FALSE';}
 
 //select
 "select" 		{return 'R_SELECT';}
@@ -385,6 +390,15 @@ expresion
 		console.log('LLAMADO DE VARIABLE: ' +$1); 
 		$$ = new CallVar($1,this._$.first_line, this._$.first_column);
 		}
+	|R_TRUE{ 
+		console.log('TRUE: ' +$1); 
+		$$ = new Primitivo(TipoDato.BOOLEAN,true,this._$.first_line, this._$.first_column);
+		}
+	}
+	|R_FALSE{ 
+		console.log('FALSE: ' +$1); 
+		$$ = new Primitivo(TipoDato.BOOLEAN,false,this._$.first_line, this._$.first_column);
+		}
 	| casteo {
 		$$ = $1;
 		}
@@ -433,6 +447,7 @@ tipoDato
 	|R_DOUBLE {$$ = TipoDato.DOUBLE; }
 	|R_VARCHAR {$$ = TipoDato.VARCHAR; }
 	|R_DATE {$$ = TipoDato.DATE; }
+	|R_BOOLEAN { $$=TipoDato.BOOLEAN;}
 ;
 
 actualizarV 

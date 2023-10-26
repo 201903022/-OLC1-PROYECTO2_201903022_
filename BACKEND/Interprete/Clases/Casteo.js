@@ -17,62 +17,69 @@ class Casteo extends Instruction {
 
     interpretar(entorno,lista_errores){ 
         console.log('Interpretar Casteo ')
-        this.expresion = this.expresion.interpretar(entorno,lista_errores); 
+        let exp = this.expresion.interpretar(entorno,lista_errores)
         let valor ; 
-        switch (this.castTo) {
-            case TipoDato.VARCHAR:
-                try {
-                    valor = this.expresion.valor.toString();
-                    return new Dato(valor,TipoDato.VARCHAR,this.fila,this.columna);                                        
-                } catch (error) {
-                    console.log(`Error en casteo de ${this.expresion.valor}: ${error}`)
-                    
-                }
-                
-                break;
-            case TipoDato.INT:
-                try {
-                    if (this.expresion.tipo == TipoDato.BOOLEAN) {
-                        if (this.expresion.valor) {
-                            valor = 1;
-                            return new Dato(valor,TipoDato.INT,this.fila,this.columna);                                        
-
-                        } else {
-                            valor = 0;
-                            return new Dato(valor,TipoDato.INT,this.fila,this.columna);                                        
-                        }                        
-                    } else if (this.expresion.tipo == TipoDato.INT) {
-                        valor = this.expresion.valor;    
-                        return new Dato(valor,TipoDato.INT,this.fila,this.columna);                                        
-                    
-                    } 
-                    else if (this.expresion.tipo == TipoDato.VARCHAR) {
-                        try {
-                            //IsNan?
-                            if (isNaN(this.expresion.valor)) {
-                                //parseInt
-                                console.log('La cadena se puede castear a Entero')
-                                valor = parseInt(this.expresion.valor);
-                                return new Dato(valor,TipoDato.INT,this.fila,this.columna);                                 
-                            } else {
-                                console.log(`Esta cadena no se puede castear a int:${this.expresion.valor}`)
-                                
-                            }
-                        } catch (error) {
-                            
-                        }
+        try {
+            switch (this.castTo) {
+                case TipoDato.VARCHAR:
+                    console.log('VARCHUYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAR')
+                    try {
+                        console.log('Cambiando valor de : '+ exp.valor)
+                        valor = exp.valor.toString();
+                        return new Dato(valor,TipoDato.VARCHAR,this.fila,this.columna);                                        
+                    } catch (error) {
+                        console.log(`Error en casteo de ${exp.valor}: ${error}`)
                         
                     }
-                } catch (error) {
-                    console.log(`Error en casteo de ${this.expresion.valor}: ${error}`)
                     
-                }
-                
-                break;
-        
-            default:
-                break;
-        }                                                                                                                                                    
+                    break;
+                case TipoDato.INT:
+                    try {
+                        if (exp.tipo == TipoDato.BOOLEAN) {
+                            if (exp.valor) {
+                                valor = 1;
+                                return new Dato(valor,TipoDato.INT,this.fila,this.columna);                                        
+    
+                            } else {
+                                valor = 0;
+                                return new Dato(valor,TipoDato.INT,this.fila,this.columna);                                        
+                            }                        
+                        } else if (exp.tipo == TipoDato.INT) {
+                            valor = exp.valor;    
+                            return new Dato(valor,TipoDato.INT,this.fila,this.columna);                                        
+                        
+                        } 
+                        else if (exp.tipo == TipoDato.VARCHAR) {
+                            try {
+                                //IsNan?
+                                if (isNaN(exp.valor)) {
+                                    //parseInt
+                                    console.log('La cadena se puede castear a Entero')
+                                    valor = parseInt(exp.valor);
+                                    return new Dato(valor,TipoDato.INT,this.fila,this.columna);                                 
+                                } else {
+                                    console.log(`Esta cadena no se puede castear a int:${exp.valor}`)
+                                    
+                                }
+                            } catch (error) {
+                                
+                            }
+                            
+                        }
+                    } catch (error) {
+                        console.log(`Error en casteo de ${exp.valor}: ${error}`)
+                        
+                    }
+                    
+                    break;
+            
+                default:
+                    break;
+            }  
+        } catch (error) {
+            console.log('Error en interpretar casteo: '+error)
+        }
+                                                                                                                                                  
     }
 
     generarAst(){ 
