@@ -86,7 +86,6 @@ https://github.com/jd-toralla/OLC1-2S2023/blob/main/JisonInterprete/src/Grammar/
 "and" 			{return 'AND';}
 "or" 			{return 'OR';}
 "not" 			{return 'NOT';}
-"xor" 			{return 'R_XOR';}
 
 //Operadores Relacionales 
 ">=" 			{return 'MAYORIK';}

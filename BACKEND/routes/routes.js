@@ -1,3 +1,9 @@
+
+/* 
+Auxiliar: ALex Guerra
+https://github.com/AlexIngGuerra/OLC1-2S2023
+*/
+
 const express = require('express');
 const router = express.Router();
 const controler = require('../controllers/controler.js');

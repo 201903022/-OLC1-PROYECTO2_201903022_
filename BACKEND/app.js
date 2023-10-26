@@ -1,3 +1,9 @@
+
+/* 
+Auxiliar: ALex Guerra
+https://github.com/AlexIngGuerra/OLC1-2S2023
+*/
+
 //express
 const express = require('express');
 //cors
